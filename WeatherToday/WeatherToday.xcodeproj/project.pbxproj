@@ -21,6 +21,8 @@
 		FBEFD8082902C5E200CC50DE /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8072902C5E200CC50DE /* EndPoint.swift */; };
 		FBEFD80B2902D6C800CC50DE /* WeatherDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD80A2902D6C800CC50DE /* WeatherDTO.swift */; };
 		FBEFD80D2902D82700CC50DE /* CurrentWeatherDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD80C2902D82700CC50DE /* CurrentWeatherDTO.swift */; };
+		FBEFD8122902D9F100CC50DE /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8112902D9F100CC50DE /* Weather.swift */; };
+		FBEFD8142902DA1C00CC50DE /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8132902DA1C00CC50DE /* CurrentWeather.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		FBEFD8072902C5E200CC50DE /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		FBEFD80A2902D6C800CC50DE /* WeatherDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDTO.swift; sourceTree = "<group>"; };
 		FBEFD80C2902D82700CC50DE /* CurrentWeatherDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherDTO.swift; sourceTree = "<group>"; };
+		FBEFD8112902D9F100CC50DE /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
+		FBEFD8132902DA1C00CC50DE /* CurrentWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,7 +147,8 @@
 		FBEFD7D028FFFF1B00CC50DE /* WeatherToday */ = {
 			isa = PBXGroup;
 			children = (
-				FBEFD801290014BD00CC50DE /* Network */,
+				FBEFD80F2902D9D200CC50DE /* Data */,
+				FBEFD80E2902D9CA00CC50DE /* Domain */,
 				FBEFD7D128FFFF1B00CC50DE /* AppDelegate.swift */,
 				FBEFD7D328FFFF1B00CC50DE /* SceneDelegate.swift */,
 				FBEFD7D528FFFF1B00CC50DE /* ViewController.swift */,
@@ -187,6 +192,31 @@
 				FBEFD80C2902D82700CC50DE /* CurrentWeatherDTO.swift */,
 			);
 			path = NetworkDTO;
+			sourceTree = "<group>";
+		};
+		FBEFD80E2902D9CA00CC50DE /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD8102902D9E000CC50DE /* Entity */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		FBEFD80F2902D9D200CC50DE /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD801290014BD00CC50DE /* Network */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		FBEFD8102902D9E000CC50DE /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD8112902D9F100CC50DE /* Weather.swift */,
+				FBEFD8132902DA1C00CC50DE /* CurrentWeather.swift */,
+			);
+			path = Entity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -429,10 +459,12 @@
 			files = (
 				FBEFD7D628FFFF1B00CC50DE /* ViewController.swift in Sources */,
 				FBEFD7D228FFFF1B00CC50DE /* AppDelegate.swift in Sources */,
+				FBEFD8142902DA1C00CC50DE /* CurrentWeather.swift in Sources */,
 				FBEFD80B2902D6C800CC50DE /* WeatherDTO.swift in Sources */,
 				FBEFD8082902C5E200CC50DE /* EndPoint.swift in Sources */,
 				FBEFD80D2902D82700CC50DE /* CurrentWeatherDTO.swift in Sources */,
 				FBEFD7D428FFFF1B00CC50DE /* SceneDelegate.swift in Sources */,
+				FBEFD8122902D9F100CC50DE /* Weather.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

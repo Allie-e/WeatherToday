@@ -1,5 +1,5 @@
 //
-//  CurrentWeatherDTO.swift
+//  CurrentWeather.swift
 //  WeatherToday
 //
 //  Created by Allie on 2022/10/21.
@@ -8,9 +8,9 @@
 import Foundation
 
 // MARK: - Current
-struct Current: Codable {
+struct Current {
     let coord: Coord
-    let weather: [WeatherDTO]
+    let weather: [Weather]
     let main: Main
     let timezone, id: Int
     let name: String
@@ -18,21 +18,14 @@ struct Current: Codable {
 }
 
 // MARK: - Coord
-struct Coord: Codable {
+struct Coord {
     let lon, lat: Double
 }
 
 // MARK: - Main
-struct Main: Codable {
+struct Main {
     let temp: Double
     let feelsLike: Double
     let tempMin: Double
     let tempMax: Double
-    
-    enum CodingKeys: String, CodingKey {
-        case temp
-        case feelsLike = "feels_like"
-        case tempMin = "temp_min"
-        case tempMax = "temp_max"
-    }
 }
