@@ -27,6 +27,7 @@
 		FBEFD8182905263B00CC50DE /* CoordinateDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8172905263B00CC50DE /* CoordinateDTO.swift */; };
 		FBEFD81A2905268B00CC50DE /* TemperatureDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8192905268B00CC50DE /* TemperatureDTO.swift */; };
 		FBEFD81C290526AE00CC50DE /* Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD81B290526AE00CC50DE /* Temperature.swift */; };
+		FBEFD81E29052F6D00CC50DE /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD81D29052F6D00CC50DE /* NetworkError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		FBEFD8172905263B00CC50DE /* CoordinateDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateDTO.swift; sourceTree = "<group>"; };
 		FBEFD8192905268B00CC50DE /* TemperatureDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureDTO.swift; sourceTree = "<group>"; };
 		FBEFD81B290526AE00CC50DE /* Temperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Temperature.swift; sourceTree = "<group>"; };
+		FBEFD81D29052F6D00CC50DE /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				FBEFD8072902C5E200CC50DE /* EndPoint.swift */,
+				FBEFD81D29052F6D00CC50DE /* NetworkError.swift */,
 				FBEFD8092902D68600CC50DE /* NetworkDTO */,
 			);
 			path = Network;
@@ -479,6 +482,7 @@
 				FBEFD8162905262800CC50DE /* Coordinate.swift in Sources */,
 				FBEFD80D2902D82700CC50DE /* CurrentWeatherDTO.swift in Sources */,
 				FBEFD8182905263B00CC50DE /* CoordinateDTO.swift in Sources */,
+				FBEFD81E29052F6D00CC50DE /* NetworkError.swift in Sources */,
 				FBEFD7D428FFFF1B00CC50DE /* SceneDelegate.swift in Sources */,
 				FBEFD8122902D9F100CC50DE /* Weather.swift in Sources */,
 			);
