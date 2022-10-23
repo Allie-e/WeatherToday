@@ -29,6 +29,7 @@
 		FBEFD81C290526AE00CC50DE /* Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD81B290526AE00CC50DE /* Temperature.swift */; };
 		FBEFD81E29052F6D00CC50DE /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD81D29052F6D00CC50DE /* NetworkError.swift */; };
 		FBEFD820290534D600CC50DE /* WeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD81F290534D600CC50DE /* WeatherAPI.swift */; };
+		FBEFD8242905440200CC50DE /* CurrentWeatherRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8232905440200CC50DE /* CurrentWeatherRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		FBEFD81B290526AE00CC50DE /* Temperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Temperature.swift; sourceTree = "<group>"; };
 		FBEFD81D29052F6D00CC50DE /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		FBEFD81F290534D600CC50DE /* WeatherAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPI.swift; sourceTree = "<group>"; };
+		FBEFD8232905440200CC50DE /* CurrentWeatherRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +223,7 @@
 		FBEFD80F2902D9D200CC50DE /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				FBEFD822290542A200CC50DE /* Repository */,
 				FBEFD801290014BD00CC50DE /* Network */,
 			);
 			path = Data;
@@ -235,6 +238,14 @@
 				FBEFD81B290526AE00CC50DE /* Temperature.swift */,
 			);
 			path = Entity;
+			sourceTree = "<group>";
+		};
+		FBEFD822290542A200CC50DE /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD8232905440200CC50DE /* CurrentWeatherRepository.swift */,
+			);
+			path = Repository;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -479,6 +490,7 @@
 				FBEFD820290534D600CC50DE /* WeatherAPI.swift in Sources */,
 				FBEFD7D228FFFF1B00CC50DE /* AppDelegate.swift in Sources */,
 				FBEFD81A2905268B00CC50DE /* TemperatureDTO.swift in Sources */,
+				FBEFD8242905440200CC50DE /* CurrentWeatherRepository.swift in Sources */,
 				FBEFD8142902DA1C00CC50DE /* CurrentWeather.swift in Sources */,
 				FBEFD80B2902D6C800CC50DE /* WeatherDTO.swift in Sources */,
 				FBEFD8082902C5E200CC50DE /* EndPoint.swift in Sources */,

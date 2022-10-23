@@ -10,6 +10,8 @@ import Alamofire
 import RxSwift
 
 final class WeatherAPI {
+    static let shared = WeatherAPI()
+    
     func fetch(with url: URL?) -> Observable<Data> {
         guard let url = url else {
             return .error(NetworkError.invalidURL)
