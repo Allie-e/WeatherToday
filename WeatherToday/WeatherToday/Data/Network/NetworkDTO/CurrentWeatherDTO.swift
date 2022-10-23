@@ -7,61 +7,25 @@
 
 import Foundation
 
-// MARK: - CurrentDTO
-struct CurrentDTO: Codable {
-    let coord: CoordDTO
+struct CurrentWeatherDTO: Codable {
+    let coord: CoordinateDTO
     let weather: [WeatherDTO]
-    let main: MainDTO
+    let main: TemperatureDTO
     let timezone: Int
     let id: Int
     let name: String
     let cod: Int
     
-    func toDomain() -> Current {
+    func toDomain() -> CurrentWeather {
         let weather = weather.map { $0.toDomain() }
 
-        return Current(
+        return CurrentWeather(
             coord: coord.toDomain(),
             weather: weather,
-            main: main.toDomain(),
+            temperature: main.toDomain(),
             timezone: timezone,
             id: id,
             name: name,
             cod: cod)
-    }
-}
-
-// MARK: - CoordDTO
-struct CoordDTO: Codable {
-    let lon: Double
-    let lat: Double
-    
-    func toDomain() -> Coord {
-        return Coord(
-            lon: lon,
-            lat: lat)
-    }
-}
-
-// MARK: - MainDTO
-struct MainDTO: Codable {
-    let temp: Double
-    let feelsLike: Double
-    let tempMin: Double
-    let tempMax: Double
-    
-    enum CodingKeys: String, CodingKey {
-        case temp
-        case feelsLike = "feels_like"
-        case tempMin = "temp_min"
-        case tempMax = "temp_max"
-    }
-    
-    func toDomain() -> Main {
-        return Main(
-            temp: temp,
-            feelsLike: feelsLike,
-            tempMin: tempMin,
-            tempMax: tempMax)
     }
 }

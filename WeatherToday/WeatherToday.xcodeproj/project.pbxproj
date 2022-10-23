@@ -23,6 +23,10 @@
 		FBEFD80D2902D82700CC50DE /* CurrentWeatherDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD80C2902D82700CC50DE /* CurrentWeatherDTO.swift */; };
 		FBEFD8122902D9F100CC50DE /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8112902D9F100CC50DE /* Weather.swift */; };
 		FBEFD8142902DA1C00CC50DE /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8132902DA1C00CC50DE /* CurrentWeather.swift */; };
+		FBEFD8162905262800CC50DE /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8152905262800CC50DE /* Coordinate.swift */; };
+		FBEFD8182905263B00CC50DE /* CoordinateDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8172905263B00CC50DE /* CoordinateDTO.swift */; };
+		FBEFD81A2905268B00CC50DE /* TemperatureDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8192905268B00CC50DE /* TemperatureDTO.swift */; };
+		FBEFD81C290526AE00CC50DE /* Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD81B290526AE00CC50DE /* Temperature.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +73,10 @@
 		FBEFD80C2902D82700CC50DE /* CurrentWeatherDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherDTO.swift; sourceTree = "<group>"; };
 		FBEFD8112902D9F100CC50DE /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		FBEFD8132902DA1C00CC50DE /* CurrentWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
+		FBEFD8152905262800CC50DE /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
+		FBEFD8172905263B00CC50DE /* CoordinateDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateDTO.swift; sourceTree = "<group>"; };
+		FBEFD8192905268B00CC50DE /* TemperatureDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureDTO.swift; sourceTree = "<group>"; };
+		FBEFD81B290526AE00CC50DE /* Temperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Temperature.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,8 +196,10 @@
 		FBEFD8092902D68600CC50DE /* NetworkDTO */ = {
 			isa = PBXGroup;
 			children = (
-				FBEFD80A2902D6C800CC50DE /* WeatherDTO.swift */,
 				FBEFD80C2902D82700CC50DE /* CurrentWeatherDTO.swift */,
+				FBEFD80A2902D6C800CC50DE /* WeatherDTO.swift */,
+				FBEFD8172905263B00CC50DE /* CoordinateDTO.swift */,
+				FBEFD8192905268B00CC50DE /* TemperatureDTO.swift */,
 			);
 			path = NetworkDTO;
 			sourceTree = "<group>";
@@ -213,8 +223,10 @@
 		FBEFD8102902D9E000CC50DE /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				FBEFD8112902D9F100CC50DE /* Weather.swift */,
 				FBEFD8132902DA1C00CC50DE /* CurrentWeather.swift */,
+				FBEFD8112902D9F100CC50DE /* Weather.swift */,
+				FBEFD8152905262800CC50DE /* Coordinate.swift */,
+				FBEFD81B290526AE00CC50DE /* Temperature.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -459,10 +471,14 @@
 			files = (
 				FBEFD7D628FFFF1B00CC50DE /* ViewController.swift in Sources */,
 				FBEFD7D228FFFF1B00CC50DE /* AppDelegate.swift in Sources */,
+				FBEFD81A2905268B00CC50DE /* TemperatureDTO.swift in Sources */,
 				FBEFD8142902DA1C00CC50DE /* CurrentWeather.swift in Sources */,
 				FBEFD80B2902D6C800CC50DE /* WeatherDTO.swift in Sources */,
 				FBEFD8082902C5E200CC50DE /* EndPoint.swift in Sources */,
+				FBEFD81C290526AE00CC50DE /* Temperature.swift in Sources */,
+				FBEFD8162905262800CC50DE /* Coordinate.swift in Sources */,
 				FBEFD80D2902D82700CC50DE /* CurrentWeatherDTO.swift in Sources */,
+				FBEFD8182905263B00CC50DE /* CoordinateDTO.swift in Sources */,
 				FBEFD7D428FFFF1B00CC50DE /* SceneDelegate.swift in Sources */,
 				FBEFD8122902D9F100CC50DE /* Weather.swift in Sources */,
 			);
