@@ -12,14 +12,35 @@ struct CurrentDTO: Codable {
     let coord: CoordDTO
     let weather: [WeatherDTO]
     let main: MainDTO
-    let timezone, id: Int
+    let timezone: Int
+    let id: Int
     let name: String
     let cod: Int
+    
+    func toDomain() -> Current {
+        let weather = weather.map { $0.toDomain() }
+
+        return Current(
+            coord: coord.toDomain(),
+            weather: weather,
+            main: main.toDomain(),
+            timezone: timezone,
+            id: id,
+            name: name,
+            cod: cod)
+    }
 }
 
 // MARK: - CoordDTO
 struct CoordDTO: Codable {
-    let lon, lat: Double
+    let lon: Double
+    let lat: Double
+    
+    func toDomain() -> Coord {
+        return Coord(
+            lon: lon,
+            lat: lat)
+    }
 }
 
 // MARK: - MainDTO
@@ -34,5 +55,13 @@ struct MainDTO: Codable {
         case feelsLike = "feels_like"
         case tempMin = "temp_min"
         case tempMax = "temp_max"
+    }
+    
+    func toDomain() -> Main {
+        return Main(
+            temp: temp,
+            feelsLike: feelsLike,
+            tempMin: tempMin,
+            tempMax: tempMax)
     }
 }

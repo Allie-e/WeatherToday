@@ -18,4 +18,12 @@ struct WeatherDTO: Codable {
         case weatherDescription = "description"
         case icon
     }
+    
+    func toDomain() -> Weather {
+        return Weather(
+            id: id,
+            main: main,
+            weatherDescription: weatherDescription,
+            icon: icon)
+    }
 }

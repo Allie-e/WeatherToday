@@ -12,14 +12,16 @@ struct Current {
     let coord: Coord
     let weather: [Weather]
     let main: Main
-    let timezone, id: Int
+    let timezone: Int
+    let id: Int
     let name: String
     let cod: Int
 }
 
 // MARK: - Coord
 struct Coord {
-    let lon, lat: Double
+    let lon: Double
+    let lat: Double
 }
 
 // MARK: - Main
