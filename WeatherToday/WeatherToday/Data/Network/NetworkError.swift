@@ -9,14 +9,14 @@ import Foundation
 
 enum NetworkError: Error {
     case requestError
-    case serverError
+    case invalidURL
     
     var description: String {
         switch self {
         case .requestError:
             return "ERROR: request error"
-        case .serverError:
-            return "ERROR: server error"
+        case .invalidURL:
+            return "ERROR: invalid URL"
         }
     }
 }
