@@ -32,6 +32,7 @@
 		FBEFD8242905440200CC50DE /* CurrentWeatherRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8232905440200CC50DE /* CurrentWeatherRepository.swift */; };
 		FBEFD82A2906C26300CC50DE /* CurrentWeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8292906C26300CC50DE /* CurrentWeatherView.swift */; };
 		FBEFD82D2906E03600CC50DE /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD82C2906E03500CC50DE /* Double+Extension.swift */; };
+		FBEFD8322908097700CC50DE /* CurrentWeatherUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEFD8312908097700CC50DE /* CurrentWeatherUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		FBEFD8232905440200CC50DE /* CurrentWeatherRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherRepository.swift; sourceTree = "<group>"; };
 		FBEFD8292906C26300CC50DE /* CurrentWeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherView.swift; sourceTree = "<group>"; };
 		FBEFD82C2906E03500CC50DE /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
+		FBEFD8312908097700CC50DE /* CurrentWeatherUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +223,7 @@
 		FBEFD80E2902D9CA00CC50DE /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				FBEFD8302908096500CC50DE /* UseCase */,
 				FBEFD8102902D9E000CC50DE /* Entity */,
 			);
 			path = Domain;
@@ -276,6 +279,14 @@
 				FBEFD82C2906E03500CC50DE /* Double+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		FBEFD8302908096500CC50DE /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD8312908097700CC50DE /* CurrentWeatherUseCase.swift */,
+			);
+			path = UseCase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -522,6 +533,7 @@
 				FBEFD7D228FFFF1B00CC50DE /* AppDelegate.swift in Sources */,
 				FBEFD82D2906E03600CC50DE /* Double+Extension.swift in Sources */,
 				FBEFD81A2905268B00CC50DE /* TemperatureDTO.swift in Sources */,
+				FBEFD8322908097700CC50DE /* CurrentWeatherUseCase.swift in Sources */,
 				FBEFD8242905440200CC50DE /* CurrentWeatherRepository.swift in Sources */,
 				FBEFD8142902DA1C00CC50DE /* CurrentWeather.swift in Sources */,
 				FBEFD80B2902D6C800CC50DE /* WeatherDTO.swift in Sources */,
