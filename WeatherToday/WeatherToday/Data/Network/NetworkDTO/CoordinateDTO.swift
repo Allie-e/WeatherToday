@@ -8,12 +8,12 @@
 import Foundation
 
 struct CoordinateDTO: Codable {
-    let lon: Double
-    let lat: Double
+    let latitude: Double
+    let longitude: Double
     
     func toDomain() -> Coordinate {
         return Coordinate(
-            lon: lon,
-            lat: lat)
+            latitude: latitude,
+            longitude: longitude)
     }
 }
