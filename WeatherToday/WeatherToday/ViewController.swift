@@ -10,6 +10,7 @@ import CoreLocation
 import RxSwift
 
 class ViewController: UIViewController {
+    let currentWeatherView = CurrentWeatherView()
     let viewModel = CurrentWeatherViewModel()
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
@@ -17,6 +18,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupCurrentWeatherViewLayout()
         setupLocationManager()
         bind()
     }
@@ -27,7 +29,8 @@ class ViewController: UIViewController {
         
         output.loadCurrentWeather
             .subscribe(onNext: { weather in
-                print(weather?.coord.latitude, weather?.coord.longitude)
+                guard let weather = weather else { return }
+                self.currentWeatherView.setupLabelText(with: weather)
             })
             .disposed(by: disposeBag)
         
@@ -40,11 +43,17 @@ class ViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
+    
+    private func setupCurrentWeatherViewLayout() {
+        view.addSubview(currentWeatherView)
+        currentWeatherView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
 }
 
 extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print(locations)
         if let location = locations.first {
             loadLocationObservable.onNext(Coordinate(
                 latitude: location.coordinate.latitude,

@@ -20,7 +20,8 @@ enum EndPoint {
             let latQuery = URLQueryItem(name: "lat", value: lat.description)
             let lonQuery = URLQueryItem(name: "lon", value: lon.description)
             let appidQuery = URLQueryItem(name: "appid", value: EndPoint.apiKey)
-            components?.queryItems = [latQuery, lonQuery, appidQuery]
+            let unitsQuery = URLQueryItem(name: "units", value: "metric")
+            components?.queryItems = [latQuery, lonQuery, appidQuery, unitsQuery]
             
             return components?.url
         }
