@@ -11,10 +11,10 @@ import RxSwift
 
 final class CurrentWeatherViewModel: ViewModelDescribing {
     final class Input {
-        let viewWillAppear: Observable<Void>
+        let loadLocation: Observable<Coordinate>
         
-        init(viewWillAppear: Observable<Void>) {
-            self.viewWillAppear = viewWillAppear
+        init(loadLocation: Observable<Coordinate>) {
+            self.loadLocation = loadLocation
         }
     }
     
@@ -30,10 +30,10 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
     private let disposeBag: DisposeBag = .init()
     
     func transform(_ input: Input) -> Output {
-        let currentWeather = input.viewWillAppear
+        let currentWeather = input.loadLocation
             .withUnretained(self)
-            .flatMap({ owner, _ in
-                owner.fetchCurrentWeather(with: 37.56667, 126.97806)
+            .flatMap({ owner, location in
+                owner.fetchCurrentWeather(with: location.latitude, location.longitude)
             })
         
         return Output(loadCurrentWeather: currentWeather)

@@ -10,12 +10,27 @@ import CoreLocation
 import RxSwift
 
 class ViewController: UIViewController {
+    let viewModel = CurrentWeatherViewModel()
+    let loadLocationObservable: PublishSubject<Coordinate> = .init()
+    let disposeBag: DisposeBag = .init()
     var locationManager: CLLocationManager!
-    var currentLocation: Coordinate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocationManager()
+        bind()
+    }
+    
+    func bind() {
+        let input = CurrentWeatherViewModel.Input(loadLocation: loadLocationObservable)
+        let output = viewModel.transform(input)
+        
+        output.loadCurrentWeather
+            .subscribe(onNext: { weather in
+                print(weather?.coord.latitude, weather?.coord.longitude)
+            })
+            .disposed(by: disposeBag)
+        
     }
     
     private func setupLocationManager() {
@@ -29,9 +44,11 @@ class ViewController: UIViewController {
 
 extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print(locations)
         if let location = locations.first {
-            currentLocation?.latitude = location.coordinate.latitude
-            currentLocation?.longitude = location.coordinate.latitude
+            loadLocationObservable.onNext(Coordinate(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude))
         }
     }
     
