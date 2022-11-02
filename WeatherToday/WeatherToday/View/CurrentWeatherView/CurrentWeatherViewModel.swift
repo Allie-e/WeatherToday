@@ -7,13 +7,14 @@
 
 import Foundation
 import RxSwift
+import CoreLocation
 
 
 final class CurrentWeatherViewModel: ViewModelDescribing {
     final class Input {
-        let loadLocation: Observable<Coordinate>
+        let loadLocation: Observable<[CLLocation]>
         
-        init(loadLocation: Observable<Coordinate>) {
+        init(loadLocation: Observable<[CLLocation]>) {
             self.loadLocation = loadLocation
         }
     }
@@ -32,14 +33,18 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
     func transform(_ input: Input) -> Output {
         let currentWeather = input.loadLocation
             .withUnretained(self)
-            .flatMap({ owner, location in
-                owner.fetchCurrentWeather(with: location.latitude, location.longitude)
+            .flatMap({ owner, location -> Observable<CurrentWeather?> in
+                guard let location = location.first else {
+                    return Observable.empty()
+                }
+                
+                return owner.fetchCurrentWeather(with: location.coordinate.latitude, location.coordinate.longitude)
             })
         
         return Output(loadCurrentWeather: currentWeather)
     }
     
-    func fetchCurrentWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {
+    private func fetchCurrentWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {
         return currentWeatherUseCase.fetchCurrentWeather(with: latitude, longitude)
     }
 }
