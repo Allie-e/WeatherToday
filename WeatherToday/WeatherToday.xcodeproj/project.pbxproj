@@ -196,7 +196,6 @@
 		FB9011AC291259C200228B35 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				FBEFD7DF28FFFF1D00CC50DE /* Info.plist */,
 				FBEFD7DC28FFFF1D00CC50DE /* LaunchScreen.storyboard */,
 				FBEFD7DA28FFFF1D00CC50DE /* Assets.xcassets */,
 			);
@@ -235,6 +234,7 @@
 				FBEFD82B2906E01700CC50DE /* Extension */,
 				FB9011AB2912597000228B35 /* Application */,
 				FB9011AC291259C200228B35 /* Resource */,
+				FBEFD7DF28FFFF1D00CC50DE /* Info.plist */,
 			);
 			path = WeatherToday;
 			sourceTree = "<group>";
