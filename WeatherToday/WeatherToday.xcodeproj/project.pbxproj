@@ -175,6 +175,34 @@
 			path = CLLocationManager;
 			sourceTree = "<group>";
 		};
+		FB9011AA2912595700228B35 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD8272906C06100CC50DE /* View */,
+				FB9011A1290AA37F00228B35 /* Protocol */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		FB9011AB2912597000228B35 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD7D128FFFF1B00CC50DE /* AppDelegate.swift */,
+				FBEFD7D328FFFF1B00CC50DE /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		FB9011AC291259C200228B35 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD7DF28FFFF1D00CC50DE /* Info.plist */,
+				FBEFD7DC28FFFF1D00CC50DE /* LaunchScreen.storyboard */,
+				FBEFD7DA28FFFF1D00CC50DE /* Assets.xcassets */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 		FBEFD7C528FFFF1B00CC50DE = {
 			isa = PBXGroup;
 			children = (
@@ -200,18 +228,13 @@
 		FBEFD7D028FFFF1B00CC50DE /* WeatherToday */ = {
 			isa = PBXGroup;
 			children = (
-				FB9011A4291232D000228B35 /* DelegateProxy */,
-				FB9011A1290AA37F00228B35 /* Protocol */,
-				FBEFD82B2906E01700CC50DE /* Extension */,
-				FBEFD8272906C06100CC50DE /* View */,
-				FBEFD80F2902D9D200CC50DE /* Data */,
+				FB9011AA2912595700228B35 /* Presentation */,
 				FBEFD80E2902D9CA00CC50DE /* Domain */,
-				FBEFD7D128FFFF1B00CC50DE /* AppDelegate.swift */,
-				FBEFD7D328FFFF1B00CC50DE /* SceneDelegate.swift */,
-				FBEFD7D528FFFF1B00CC50DE /* ViewController.swift */,
-				FBEFD7DA28FFFF1D00CC50DE /* Assets.xcassets */,
-				FBEFD7DC28FFFF1D00CC50DE /* LaunchScreen.storyboard */,
-				FBEFD7DF28FFFF1D00CC50DE /* Info.plist */,
+				FBEFD80F2902D9D200CC50DE /* Data */,
+				FB9011A4291232D000228B35 /* DelegateProxy */,
+				FBEFD82B2906E01700CC50DE /* Extension */,
+				FB9011AB2912597000228B35 /* Application */,
+				FB9011AC291259C200228B35 /* Resource */,
 			);
 			path = WeatherToday;
 			sourceTree = "<group>";
@@ -303,6 +326,7 @@
 		FBEFD8282906C06900CC50DE /* CurrentWeatherView */ = {
 			isa = PBXGroup;
 			children = (
+				FBEFD7D528FFFF1B00CC50DE /* ViewController.swift */,
 				FBEFD8292906C26300CC50DE /* CurrentWeatherView.swift */,
 				FB90119F290823A300228B35 /* CurrentWeatherViewModel.swift */,
 			);
