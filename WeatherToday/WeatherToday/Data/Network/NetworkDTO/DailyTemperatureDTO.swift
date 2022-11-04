@@ -10,4 +10,10 @@ import Foundation
 struct DailyTemperatureDTO: Codable {
     let min: Double
     let max: Double
+    
+    func toDomain() -> DailyTemperature {
+        return DailyTemperature(
+            min: min,
+            max: max)
+    }
 }

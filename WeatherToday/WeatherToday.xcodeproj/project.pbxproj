@@ -290,10 +290,10 @@
 				FBEFD80A2902D6C800CC50DE /* WeatherDTO.swift */,
 				FBEFD8172905263B00CC50DE /* CoordinateDTO.swift */,
 				FBEFD8192905268B00CC50DE /* CurrentTemperatureDTO.swift */,
+				FB9011B329150E0E00228B35 /* ForecastWeatherDTO.swift */,
 				FB9011AD2915023F00228B35 /* HourlyWeatherDTO.swift */,
 				FB9011AF2915049C00228B35 /* DailyWeatherDTO.swift */,
 				FB9011B129150A1500228B35 /* DailyTemperatureDTO.swift */,
-				FB9011B329150E0E00228B35 /* ForecastWeatherDTO.swift */,
 			);
 			path = NetworkDTO;
 			sourceTree = "<group>";

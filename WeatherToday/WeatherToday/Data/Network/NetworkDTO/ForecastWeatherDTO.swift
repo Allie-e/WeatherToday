@@ -12,4 +12,15 @@ struct ForecastWeatherDTO: Codable {
     let lon: Double
     let hourly: [HourlyWeatherDTO]
     let daily: [DailyWeatherDTO]
+    
+    func toDomain() -> ForecastWeather {
+        let hourly = hourly.map { $0.toDomain() }
+        let daily = daily.map { $0.toDomain() }
+        
+        return ForecastWeather(
+            latitude: lat,
+            longitude: lon,
+            hourly: hourly,
+            daily: daily)
+    }
 }
