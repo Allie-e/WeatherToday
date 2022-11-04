@@ -11,5 +11,5 @@ struct ForecastWeatherDTO: Codable {
     let lat: Double
     let lon: Double
     let hourly: [HourlyWeatherDTO]
-    let daily: [DailyTemperatureDTO]
+    let daily: [DailyWeatherDTO]
 }
