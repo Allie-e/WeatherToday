@@ -10,7 +10,7 @@ import Foundation
 struct CurrentWeatherDTO: Codable {
     let coord: CoordinateDTO
     let weather: [WeatherDTO]
-    let main: TemperatureDTO
+    let main: CurrentTemperatureDTO
     let timezone: Int
     let id: Int
     let name: String

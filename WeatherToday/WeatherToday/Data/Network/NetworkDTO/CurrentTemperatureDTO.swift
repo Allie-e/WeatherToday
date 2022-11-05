@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TemperatureDTO: Codable {
+struct CurrentTemperatureDTO: Codable {
     let temp: Double
     let feelsLike: Double
     let tempMin: Double

@@ -15,7 +15,7 @@ final class CurrentWeatherRepository {
                 let decodedData = try? JSONDecoder().decode(CurrentWeatherDTO.self, from: data)
                 
                 return decodedData?.toDomain()
-        }
+            }
         
         return currentWeather
     }
