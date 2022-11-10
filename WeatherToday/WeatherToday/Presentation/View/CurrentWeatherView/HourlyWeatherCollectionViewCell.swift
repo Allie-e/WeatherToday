@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class HourlyForecastCollectionViewCell: UICollectionViewCell {
+final class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     private let hourlyStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical

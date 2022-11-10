@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         return stackView
     }()
     let currentWeatherView = CurrentWeatherView()
-    let hourlyForecastCollectionView: UICollectionView = {
+    let hourlyWeatherCollectionView: UICollectionView = {
         let layout = setupCollectionViewLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
@@ -70,7 +70,7 @@ class ViewController: UIViewController {
     
     private func addSubviews() {
         view.addSubview(mainStackView)
-        [currentWeatherView, hourlyForecastCollectionView].forEach { view in
+        [currentWeatherView, hourlyWeatherCollectionView].forEach { view in
             mainStackView.addArrangedSubview(view)
         }
     }
@@ -121,13 +121,13 @@ class ViewController: UIViewController {
     }
     
     private func registerCollectionViewCell() {
-        hourlyForecastCollectionView.register(HourlyForecastCollectionViewCell.self)
+        hourlyWeatherCollectionView.register(HourlyWeatherCollectionViewCell.self)
     }
     
     private func setupCollectionViewDataSource() {
-        hourlyDataSource = UICollectionViewDiffableDataSource<Section, HourlyWeather>(collectionView: hourlyForecastCollectionView, cellProvider: { (collectionView, indexPath, weather) -> UICollectionViewCell in
-            guard let cell = collectionView.dequeueReusableCell( HourlyForecastCollectionViewCell.self, for: indexPath) else {
-                return HourlyForecastCollectionViewCell()
+        hourlyDataSource = UICollectionViewDiffableDataSource<Section, HourlyWeather>(collectionView: hourlyWeatherCollectionView, cellProvider: { (collectionView, indexPath, weather) -> UICollectionViewCell in
+            guard let cell = collectionView.dequeueReusableCell( HourlyWeatherCollectionViewCell.self, for: indexPath) else {
+                return HourlyWeatherCollectionViewCell()
             }
             cell.setupHourlyForecastCell(with: weather)
             
