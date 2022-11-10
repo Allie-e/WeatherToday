@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HourlyWeather {
+struct HourlyWeather: Hashable {    
     let dt: Int
     let temperature: Double
     let weather: [Weather]

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Weather {
+struct Weather: Hashable {
     let id: Int
     let main: String
     let weatherDescription: String
