@@ -9,14 +9,14 @@ import Foundation
 import RxSwift
 
 final class ForecastWeatherRepository {
-    func fetchForecastWeather(with latitude: Double, _ longitude: Double) -> Observable<ForecastWeather?> {
-        let forecastWeather = WeatherAPI.shared.fetch(with: EndPoint.forecastWeather(latitude, longitude).url)
-            .map { data -> ForecastWeather? in
+    func fetchHourlyWeather(with latitude: Double, _ longitude: Double) -> Observable<[HourlyWeather]?> {
+        let hourlyWeather = WeatherAPI.shared.fetch(with: EndPoint.forecastWeather(latitude, longitude).url)
+            .map { data -> [HourlyWeather]? in
                 let decodedData = try? JSONDecoder().decode(ForecastWeatherDTO.self, from: data)
                 
-                return decodedData?.toDomain()
+                return decodedData?.toDomain().hourly
             }
         
-        return forecastWeather
+        return hourlyWeather
     }
 }

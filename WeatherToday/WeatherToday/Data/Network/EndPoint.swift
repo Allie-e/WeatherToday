@@ -9,7 +9,7 @@ import Foundation
 
 enum EndPoint {
     private static let currentWeatherPath = "https://api.openweathermap.org/data/2.5/weather"
-    private static let forecastWeatherPath =  "https://api.openweathermap.org/data/3.0/onecall"
+    private static let forecastWeatherPath =  "https://api.openweathermap.org/data/2.5/onecall"
     private static let apiKey = "538f37ab841f4af5455c795ee0ad8e49"
     
     case currentWeather(Double, Double)

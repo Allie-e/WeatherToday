@@ -59,6 +59,13 @@ class ViewController: UIViewController {
                 self.currentWeatherView.setupLabelText(with: weather)
             })
             .disposed(by: disposeBag)
+        
+        output.loadHourlyWeather
+            .subscribe(onNext: { weather in
+                guard let weather = weather else { return }
+                self.applySnapshot(with: weather)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setupLocationManager() {
