@@ -17,4 +17,12 @@ extension Date {
         
         return formatter.string(from: self)
     }
+    
+    func toDayString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        return formatter.string(from: self)
+    }
 }
