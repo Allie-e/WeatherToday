@@ -13,6 +13,9 @@ final class HourlyWeatherCollectionViewCell: UICollectionViewCell {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .center
+        stackView.distribution = .equalCentering
+        stackView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        stackView.isLayoutMarginsRelativeArrangement = true
         
         return stackView
     }()
@@ -51,8 +54,8 @@ final class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     
     func setupHourlyForecastCell(with data: HourlyWeather) {
         timeLabel.text = data.dt.toDate().toHourString()
-        weatherImageview.image = UIImage(named: String(data.weather[0].id))
-        temperatureLabel.text = data.temperature.toRoundedString()
+        weatherImageview.image = UIImage(named: String(data.weather[0].icon))
+        temperatureLabel.text = "\(data.temperature.toRoundedString())°"
     }
     
     private func addSubviews() {
@@ -65,6 +68,9 @@ final class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     private func setupLayout() {
         hourlyStackView.snp.makeConstraints { make in
             make.edges.equalTo(contentView)
+        }
+        weatherImageview.snp.makeConstraints { make in
+            make.height.width.equalTo(50)
         }
     }
 }
