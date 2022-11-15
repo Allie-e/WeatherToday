@@ -22,10 +22,12 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
     final class Output {
         let loadCurrentWeather: Observable<CurrentWeather?>
         let loadHourlyWeather: Observable<[HourlyWeather]?>
+        let loadDailyWeather: Observable<[DailyWeather]?>
         
-        init(loadCurrentWeather: Observable<CurrentWeather?>, loadHourlyWeather: Observable<[HourlyWeather]?>) {
+        init(loadCurrentWeather: Observable<CurrentWeather?>, loadHourlyWeather: Observable<[HourlyWeather]?>, loadDailyWeather: Observable<[DailyWeather]?>) {
             self.loadCurrentWeather = loadCurrentWeather
             self.loadHourlyWeather = loadHourlyWeather
+            self.loadDailyWeather = loadDailyWeather
         }
     }
     
@@ -54,7 +56,17 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
                 return owner.fetchHourlyWeather(with: location.coordinate.latitude, location.coordinate.longitude)
             })
         
-        return Output(loadCurrentWeather: currentWeather, loadHourlyWeather: hourlyWeather)
+        let dailyWeather = input.loadLocation
+            .withUnretained(self)
+            .flatMap({ owner, location -> Observable<[DailyWeather]?> in
+                guard let location = location.first else {
+                    return Observable.empty()
+                }
+                
+                return owner.fetchDailyWeather(with: location.coordinate.latitude, location.coordinate.longitude)
+            })
+        
+        return Output(loadCurrentWeather: currentWeather, loadHourlyWeather: hourlyWeather, loadDailyWeather: dailyWeather)
     }
     
     private func fetchCurrentWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {
@@ -63,5 +75,9 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
     
     private func fetchHourlyWeather(with latitude: Double, _ longitude: Double) -> Observable<[HourlyWeather]?> {
         return forecastWeatherUseCase.fetchHourlyWeather(with: latitude, longitude)
+    }
+    
+    private func fetchDailyWeather(with latitude: Double, _ longitude: Double) -> Observable<[DailyWeather]?> {
+        return forecastWeatherUseCase.fetchDailyWeather(with: latitude, longitude)
     }
 }
