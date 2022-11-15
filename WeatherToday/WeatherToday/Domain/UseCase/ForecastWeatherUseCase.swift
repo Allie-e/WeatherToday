@@ -14,4 +14,8 @@ final class ForecastWeatherUseCase {
     func fetchHourlyWeather(with latitude: Double, _ longitude: Double) -> Observable<[HourlyWeather]?> {
         return forecastWeatherRepository.fetchHourlyWeather(with: latitude, longitude)
     }
+    
+    func fetchDailyWeather(with latitude: Double, _ longitude: Double) -> Observable<[DailyWeather]?> {
+        return forecastWeatherRepository.fetchDailyWeather(with: latitude, longitude)
+    }
 }
