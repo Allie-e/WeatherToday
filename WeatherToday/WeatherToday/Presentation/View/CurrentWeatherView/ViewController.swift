@@ -12,13 +12,14 @@ import RxSwift
 class ViewController: UIViewController {
     private enum Section {
         case hourly
+        case daily
     }
     
     private let mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = .fill
+        stackView.distribution = .fillProportionally
         stackView.spacing = 10
         stackView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -27,14 +28,23 @@ class ViewController: UIViewController {
     }()
     let currentWeatherView = CurrentWeatherView()
     let hourlyWeatherCollectionView: UICollectionView = {
-        let layout = setupCollectionViewLayout()
+        let layout = setupHourlyCollectionViewLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
         
         return collectionView
     }()
+    let dailyWeatherCollectionView: UICollectionView = {
+        let layout = setupDailyCollectionViewLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        
+        return collectionView
+    }()
     private var hourlyDataSource: UICollectionViewDiffableDataSource<Section, HourlyWeather>?
+    private var dailyDataSource: UICollectionViewDiffableDataSource<Section, DailyWeather>?
     
     let viewModel = CurrentWeatherViewModel()
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
@@ -67,7 +77,14 @@ class ViewController: UIViewController {
         output.loadHourlyWeather
             .subscribe(onNext: { weather in
                 guard let weather = weather else { return }
-                self.applySnapshot(with: weather)
+                self.applyHourlySnapshot(with: weather)
+            })
+            .disposed(by: disposeBag)
+        
+        output.loadDailyWeather
+            .subscribe(onNext: { weather in
+                guard let weather = weather else { return }
+                self.applyDailySnapshot(with: weather)
             })
             .disposed(by: disposeBag)
     }
@@ -81,7 +98,7 @@ class ViewController: UIViewController {
     
     private func addSubviews() {
         view.addSubview(mainStackView)
-        [currentWeatherView, hourlyWeatherCollectionView].forEach { view in
+        [currentWeatherView, hourlyWeatherCollectionView, dailyWeatherCollectionView].forEach { view in
             mainStackView.addArrangedSubview(view)
         }
     }
@@ -89,9 +106,6 @@ class ViewController: UIViewController {
     private func setupCurrentWeatherViewLayout() {
         mainStackView.snp.makeConstraints { make in
             make.top.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-        currentWeatherView.snp.makeConstraints { make in
-            make.height.equalTo(200)
         }
     }
     
@@ -112,7 +126,7 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Setup CollectionView
-    static func setupCollectionViewLayout() -> UICollectionViewLayout {
+    static func setupHourlyCollectionViewLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(0.25),
             heightDimension: .fractionalHeight(1.0))
@@ -120,7 +134,7 @@ class ViewController: UIViewController {
         
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.25))
+            heightDimension: .fractionalHeight(1.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
@@ -131,8 +145,27 @@ class ViewController: UIViewController {
         return layout
     }
     
+    static func setupDailyCollectionViewLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(0.2))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0))
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        
+        return layout
+    }
+    
     private func registerCollectionViewCell() {
         hourlyWeatherCollectionView.register(HourlyWeatherCollectionViewCell.self)
+        dailyWeatherCollectionView.register(DailyWeatherCollectionViewCell.self)
     }
     
     private func setupCollectionViewDataSource() {
@@ -144,13 +177,30 @@ class ViewController: UIViewController {
             
             return cell
         })
+        
+        dailyDataSource = UICollectionViewDiffableDataSource<Section, DailyWeather>(collectionView: dailyWeatherCollectionView, cellProvider: { (collectionView, indexPath, weather) -> UICollectionViewCell in
+            guard let cell = collectionView.dequeueReusableCell( DailyWeatherCollectionViewCell.self, for: indexPath) else {
+                return DailyWeatherCollectionViewCell()
+            }
+            cell.setupDailyForecastCell(with: weather)
+            
+            return cell
+        })
     }
     
-    private func applySnapshot(with weather: [HourlyWeather]) {
+    private func applyHourlySnapshot(with weather: [HourlyWeather]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, HourlyWeather>()
         snapshot.appendSections([.hourly])
         snapshot.appendItems(weather, toSection: .hourly)
         snapshot.reloadItems(weather)
         hourlyDataSource?.apply(snapshot)
+    }
+    
+    private func applyDailySnapshot(with weather: [DailyWeather]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyWeather>()
+        snapshot.appendSections([.daily])
+        snapshot.appendItems(weather, toSection: .daily)
+        snapshot.reloadItems(weather)
+        dailyDataSource?.apply(snapshot)
     }
 }
