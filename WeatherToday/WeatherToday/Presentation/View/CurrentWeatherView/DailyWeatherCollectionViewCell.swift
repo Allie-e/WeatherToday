@@ -13,7 +13,7 @@ final class DailyWeatherCollectionViewCell: UICollectionViewCell {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
-        stackView.distribution = .equalCentering
+        stackView.distribution = .equalSpacing
         stackView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         stackView.isLayoutMarginsRelativeArrangement = true
         
@@ -24,6 +24,7 @@ final class DailyWeatherCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
         label.textColor = .white
+        label.textAlignment = .center
         
         return label
     }()
@@ -37,7 +38,7 @@ final class DailyWeatherCollectionViewCell: UICollectionViewCell {
     private let minTemperatureLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
-        label.textColor = .systemGray2
+        label.textColor = .systemGray
         
         return label
     }()
@@ -77,9 +78,6 @@ final class DailyWeatherCollectionViewCell: UICollectionViewCell {
     private func setupLayout() {
         dailyStackView.snp.makeConstraints { make in
             make.edges.equalTo(contentView)
-        }
-        weatherImageview.snp.makeConstraints { make in
-            make.height.width.equalTo(50)
         }
     }
 }

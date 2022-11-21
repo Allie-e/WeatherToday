@@ -72,7 +72,7 @@ class CurrentWeatherView: UIView {
         let safeArea = safeAreaLayoutGuide
         
         nameLabel.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(safeArea).inset(5)
+            make.top.leading.trailing.equalTo(safeArea).inset(10)
         }
         
         currentTemperatureLabel.snp.makeConstraints { make in
@@ -86,8 +86,9 @@ class CurrentWeatherView: UIView {
         }
         
         temperatureLabel.snp.makeConstraints { make in
-            make.top.equalTo(descriptionLabel.snp.bottom).offset(5)
+            make.top.equalTo(descriptionLabel.snp.bottom).offset(10)
             make.leading.trailing.equalTo(nameLabel)
+            make.bottom.equalToSuperview()
         }
     }
 }

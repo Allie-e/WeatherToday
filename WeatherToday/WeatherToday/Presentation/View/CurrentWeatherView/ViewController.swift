@@ -15,23 +15,16 @@ class ViewController: UIViewController {
         case daily
     }
     
-    private let mainStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fillProportionally
-        stackView.spacing = 10
-        stackView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        
-        return stackView
-    }()
     let currentWeatherView = CurrentWeatherView()
     let hourlyWeatherCollectionView: UICollectionView = {
         let layout = setupHourlyCollectionViewLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
+        collectionView.layer.backgroundColor = (UIColor(red: 0.0784, green: 0.0784, blue: 0.4, alpha: 1.0).cgColor).copy(alpha: 0.2)
+        collectionView.layer.cornerRadius = 15
+        collectionView.layer.masksToBounds = true
+//        collectionView.layer.opacity = 0.5
         
         return collectionView
     }()
@@ -40,6 +33,9 @@ class ViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.layer.backgroundColor = (UIColor(red: 0.0784, green: 0.0784, blue: 0.4, alpha: 1.0).cgColor).copy(alpha: 0.2)
+        collectionView.layer.cornerRadius = 15
+        collectionView.layer.masksToBounds = true
         
         return collectionView
     }()
@@ -97,15 +93,26 @@ class ViewController: UIViewController {
     }
     
     private func addSubviews() {
-        view.addSubview(mainStackView)
         [currentWeatherView, hourlyWeatherCollectionView, dailyWeatherCollectionView].forEach { view in
-            mainStackView.addArrangedSubview(view)
+            self.view.addSubview(view)
         }
     }
     
     private func setupCurrentWeatherViewLayout() {
-        mainStackView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        currentWeatherView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        hourlyWeatherCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(currentWeatherView.snp.bottom).offset(50)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
+            make.height.equalTo(150)
+        }
+        dailyWeatherCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(hourlyWeatherCollectionView.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -188,6 +195,7 @@ class ViewController: UIViewController {
         })
     }
     
+
     private func applyHourlySnapshot(with weather: [HourlyWeather]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, HourlyWeather>()
         snapshot.appendSections([.hourly])

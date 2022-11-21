@@ -67,10 +67,7 @@ final class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     
     private func setupLayout() {
         hourlyStackView.snp.makeConstraints { make in
-            make.edges.equalTo(contentView)
-        }
-        weatherImageview.snp.makeConstraints { make in
-            make.height.width.equalTo(50)
+            make.edges.equalTo(self.contentView)
         }
     }
 }
