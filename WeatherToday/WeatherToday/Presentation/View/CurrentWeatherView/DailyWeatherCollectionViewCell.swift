@@ -13,7 +13,7 @@ final class DailyWeatherCollectionViewCell: UICollectionViewCell {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .equalCentering
         stackView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         stackView.isLayoutMarginsRelativeArrangement = true
         
@@ -55,6 +55,7 @@ final class DailyWeatherCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         addSubviews()
         setupLayout()
+        addUnderLine()
     }
     
     required init?(coder: NSCoder) {
@@ -79,5 +80,11 @@ final class DailyWeatherCollectionViewCell: UICollectionViewCell {
         dailyStackView.snp.makeConstraints { make in
             make.edges.equalTo(contentView)
         }
+    }
+    
+    private func addUnderLine() {
+        let underline = layer.makeBorder([.bottom], color: UIColor.white, width: 0.5)
+        underline.frame = CGRect(x: 18, y: layer.frame.height, width: underline.frame.width - 1, height: underline.frame.height)
+        layer.addSublayer(underline)
     }
 }
