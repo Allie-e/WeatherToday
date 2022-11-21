@@ -24,7 +24,6 @@ class ViewController: UIViewController {
         collectionView.layer.backgroundColor = (UIColor(red: 0.0784, green: 0.0784, blue: 0.4, alpha: 1.0).cgColor).copy(alpha: 0.2)
         collectionView.layer.cornerRadius = 15
         collectionView.layer.masksToBounds = true
-//        collectionView.layer.opacity = 0.5
         
         return collectionView
     }()
