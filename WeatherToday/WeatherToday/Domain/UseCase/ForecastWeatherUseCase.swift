@@ -18,4 +18,8 @@ final class ForecastWeatherUseCase {
     func fetchDailyWeather(with latitude: Double, _ longitude: Double) -> Observable<[DailyWeather]?> {
         return forecastWeatherRepository.fetchDailyWeather(with: latitude, longitude)
     }
+    
+    func fetchForecastWeather(with latitude: Double, _ longitude: Double) -> Observable<ForecastWeather?> {
+        return forecastWeatherRepository.fetchForecastWeather(with: latitude, longitude)
+    }
 }

@@ -10,36 +10,42 @@ import CoreLocation
 import RxSwift
 
 class ViewController: UIViewController {
-    private enum Section {
-        case hourly
-        case daily
+    private typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, WeatherItem>
+    
+    private enum WeatherItem: Hashable {
+        case hourly(HourlyWeather)
+        case daily(DailyWeather)
     }
     
-    let currentWeatherView = CurrentWeatherView()
-    let hourlyWeatherCollectionView: UICollectionView = {
-        let layout = setupHourlyCollectionViewLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.isScrollEnabled = false
-        collectionView.layer.backgroundColor = (UIColor(red: 0.0784, green: 0.0784, blue: 0.4, alpha: 1.0).cgColor).copy(alpha: 0.2)
-        collectionView.layer.cornerRadius = 15
-        collectionView.layer.masksToBounds = true
+    private enum Section: Int {
+        case hourly
+        case daily
         
-        return collectionView
-    }()
-    let dailyWeatherCollectionView: UICollectionView = {
-        let layout = setupDailyCollectionViewLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.layer.backgroundColor = (UIColor(red: 0.0784, green: 0.0784, blue: 0.4, alpha: 1.0).cgColor).copy(alpha: 0.2)
-        collectionView.layer.cornerRadius = 15
-        collectionView.layer.masksToBounds = true
         
-        return collectionView
-    }()
-    private var hourlyDataSource: UICollectionViewDiffableDataSource<Section, HourlyWeather>?
-    private var dailyDataSource: UICollectionViewDiffableDataSource<Section, DailyWeather>?
+        var columnCount: Int {
+            switch self {
+            case .hourly:
+                return 4
+                
+            case .daily:
+                return 1
+            }
+        }
+        
+        func orthogonalScrollingBehavior() -> UICollectionLayoutSectionOrthogonalScrollingBehavior {
+            switch self {
+            case .hourly:
+                return .continuous
+            case .daily:
+                return .none
+            }
+        }
+    }
+    
+    private let currentWeatherView = CurrentWeatherView()
+    private var forecastCollectionView: UICollectionView!
+    private var dataSource: DiffableDataSource?
+    private var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherItem>()
     
     let viewModel = CurrentWeatherViewModel()
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
@@ -49,10 +55,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewControllerLayer()
-        addSubviews()
-        setupCurrentWeatherViewLayout()
+        setupCollectionView()
         registerCollectionViewCell()
-        setupCollectionViewDataSource()
+        addSubviews()
+        setupDataSource()
+        setupCurrentWeatherViewLayout()
         setupLocationManager()
         bind()
     }
@@ -69,17 +76,10 @@ class ViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        output.loadHourlyWeather
+        output.loadForecast
             .subscribe(onNext: { weather in
                 guard let weather = weather else { return }
-                self.applyHourlySnapshot(with: weather)
-            })
-            .disposed(by: disposeBag)
-        
-        output.loadDailyWeather
-            .subscribe(onNext: { weather in
-                guard let weather = weather else { return }
-                self.applyDailySnapshot(with: weather)
+                self.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
             })
             .disposed(by: disposeBag)
     }
@@ -92,26 +92,8 @@ class ViewController: UIViewController {
     }
     
     private func addSubviews() {
-        [currentWeatherView, hourlyWeatherCollectionView, dailyWeatherCollectionView].forEach { view in
+        [currentWeatherView, forecastCollectionView].forEach { view in
             self.view.addSubview(view)
-        }
-    }
-    
-    private func setupCurrentWeatherViewLayout() {
-        currentWeatherView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-        }
-        hourlyWeatherCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(currentWeatherView.snp.bottom).offset(50)
-            make.leading.equalToSuperview().offset(10)
-            make.trailing.equalToSuperview().offset(-10)
-            make.height.equalTo(150)
-        }
-        dailyWeatherCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(hourlyWeatherCollectionView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(10)
-            make.trailing.equalToSuperview().offset(-10)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -131,83 +113,96 @@ class ViewController: UIViewController {
         view.layer.addSublayer(gradientLayer)
     }
     
-    // MARK: - Setup CollectionView
-    static func setupHourlyCollectionViewLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.25),
-            heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+    private func setupCurrentWeatherViewLayout() {
+        currentWeatherView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
         
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(1.0))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        return layout
+        forecastCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(currentWeatherView.snp.bottom).offset(50)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+        }
     }
     
-    static func setupDailyCollectionViewLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.2))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(1.0))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        return layout
+    private func setupCollectionView() {
+        forecastCollectionView = UICollectionView(frame: .zero, collectionViewLayout: creatLayout())
+        forecastCollectionView.backgroundColor = .clear
+        forecastCollectionView.layer.backgroundColor = (UIColor(red: 0.0784, green: 0.0784, blue: 0.4, alpha: 1.0).cgColor).copy(alpha: 0.2)
+        forecastCollectionView.layer.cornerRadius = 15
+        forecastCollectionView.layer.masksToBounds = true
+        forecastCollectionView.showsVerticalScrollIndicator = false
     }
     
     private func registerCollectionViewCell() {
-        hourlyWeatherCollectionView.register(HourlyWeatherCollectionViewCell.self)
-        dailyWeatherCollectionView.register(DailyWeatherCollectionViewCell.self)
+        forecastCollectionView.register(HourlyWeatherCollectionViewCell.self)
+        forecastCollectionView.register(DailyWeatherCollectionViewCell.self)
     }
     
-    private func setupCollectionViewDataSource() {
-        hourlyDataSource = UICollectionViewDiffableDataSource<Section, HourlyWeather>(collectionView: hourlyWeatherCollectionView, cellProvider: { (collectionView, indexPath, weather) -> UICollectionViewCell in
-            guard let cell = collectionView.dequeueReusableCell( HourlyWeatherCollectionViewCell.self, for: indexPath) else {
-                return HourlyWeatherCollectionViewCell()
+    private func creatLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout{ sectionIndex, _ -> NSCollectionLayoutSection? in
+            guard let sectionKind = Section(rawValue: sectionIndex) else {
+                return nil
             }
-            cell.setupHourlyForecastCell(with: weather)
             
-            return cell
+            //item
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2), heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            
+            //group
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: sectionKind.columnCount)
+            
+            //section
+            let section = NSCollectionLayoutSection(group: group)
+            section.orthogonalScrollingBehavior = sectionKind.orthogonalScrollingBehavior()
+            
+            return section
+        }
+        return layout
+    }
+    
+    private func setupDataSource() {
+        dataSource = DiffableDataSource(collectionView: forecastCollectionView, cellProvider: { collectionView, indexPath, item in
+            switch item {
+            case .hourly(let hourlyWeather):
+                let cell = collectionView.dequeueReusableCell(HourlyWeatherCollectionViewCell.self, for: indexPath)
+                cell?.setupHourlyForecastCell(with: hourlyWeather)
+                
+                return cell
+            case .daily(let dailyWeather):
+                let cell = collectionView.dequeueReusableCell(DailyWeatherCollectionViewCell.self, for: indexPath)
+                cell?.setupDailyForecastCell(with: dailyWeather)
+                
+                return cell
+            }
         })
+        forecastCollectionView.dataSource = dataSource
+    }
+    
+    private func applySnapshotWith(hourlyWeather: [HourlyWeather]?, dailyWeather: [DailyWeather]?) {
+        guard let hourlyWeather = hourlyWeather, let dailyWeather = dailyWeather else { return }
+        let hourlyWeatherItems = hourlyWeather.map { WeatherItem.hourly($0) }
+        let dailyWeatherItems = dailyWeather.map { WeatherItem.daily($0) }
+        snapshot = NSDiffableDataSourceSnapshot<Section, WeatherItem>()
         
-        dailyDataSource = UICollectionViewDiffableDataSource<Section, DailyWeather>(collectionView: dailyWeatherCollectionView, cellProvider: { (collectionView, indexPath, weather) -> UICollectionViewCell in
-            guard let cell = collectionView.dequeueReusableCell( DailyWeatherCollectionViewCell.self, for: indexPath) else {
-                return DailyWeatherCollectionViewCell()
-            }
-            cell.setupDailyForecastCell(with: weather)
-            
-            return cell
-        })
-    }
-    
-
-    private func applyHourlySnapshot(with weather: [HourlyWeather]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, HourlyWeather>()
         snapshot.appendSections([.hourly])
-        snapshot.appendItems(weather, toSection: .hourly)
-        snapshot.reloadItems(weather)
-        hourlyDataSource?.apply(snapshot)
+        snapshot.appendItems(hourlyWeatherItems)
+        snapshot.appendSections([.daily])
+        snapshot.appendItems(dailyWeatherItems)
+        
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
-    private func applyDailySnapshot(with weather: [DailyWeather]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyWeather>()
-        snapshot.appendSections([.daily])
-        snapshot.appendItems(weather, toSection: .daily)
-        snapshot.reloadItems(weather)
-        dailyDataSource?.apply(snapshot)
-    }
+    //    private func configureSupplementaryViewRegistrationAndDataSource() {
+    //        dataSource?.supplementaryViewProvider = { [weak self] _, kind, indexPath in
+    //            switch kind {
+    //            case SupplementaryKind.header:
+    //                return self?.collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryKind.header, withReuseIdentifier: "WeatherCollectionReusableView", for: indexPath)
+    //            default:
+    //                return UICollectionReusableView()
+    //            }
+    //        }
+    //    }
 }
