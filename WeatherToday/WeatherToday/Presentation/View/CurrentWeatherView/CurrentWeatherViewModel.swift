@@ -21,15 +21,11 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
     
     final class Output {
         let loadCurrentWeather: Observable<CurrentWeather?>
-        let loadHourlyWeather: Observable<[HourlyWeather]?>
-        let loadDailyWeather: Observable<[DailyWeather]?>
-        let loadForecast: Observable<ForecastWeather?>
+        let loadForecastWeather: Observable<ForecastWeather?>
         
-        init(loadCurrentWeather: Observable<CurrentWeather?>, loadHourlyWeather: Observable<[HourlyWeather]?>, loadDailyWeather: Observable<[DailyWeather]?>, loadForecast: Observable<ForecastWeather?>) {
+        init(loadCurrentWeather: Observable<CurrentWeather?>, loadForecastWeather: Observable<ForecastWeather?>) {
             self.loadCurrentWeather = loadCurrentWeather
-            self.loadHourlyWeather = loadHourlyWeather
-            self.loadDailyWeather = loadDailyWeather
-            self.loadForecast = loadForecast
+            self.loadForecastWeather = loadForecastWeather
         }
     }
     
@@ -48,26 +44,6 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
                 return owner.fetchCurrentWeather(with: location.coordinate.latitude, location.coordinate.longitude)
             })
         
-        let hourlyWeather = input.loadLocation
-            .withUnretained(self)
-            .flatMap({ owner, location -> Observable<[HourlyWeather]?> in
-                guard let location = location.first else {
-                    return Observable.empty()
-                }
-                
-                return owner.fetchHourlyWeather(with: location.coordinate.latitude, location.coordinate.longitude)
-            })
-        
-        let dailyWeather = input.loadLocation
-            .withUnretained(self)
-            .flatMap({ owner, location -> Observable<[DailyWeather]?> in
-                guard let location = location.first else {
-                    return Observable.empty()
-                }
-                
-                return owner.fetchDailyWeather(with: location.coordinate.latitude, location.coordinate.longitude)
-            })
-        
         let forecastWeather = input.loadLocation
             .withUnretained(self)
             .flatMap({ owner, location -> Observable<ForecastWeather?> in
@@ -78,19 +54,11 @@ final class CurrentWeatherViewModel: ViewModelDescribing {
                 return owner.fetchForecastWeather(with: location.coordinate.latitude, location.coordinate.longitude)
             })
         
-        return Output(loadCurrentWeather: currentWeather, loadHourlyWeather: hourlyWeather, loadDailyWeather: dailyWeather, loadForecast: forecastWeather)
+        return Output(loadCurrentWeather: currentWeather, loadForecastWeather: forecastWeather)
     }
     
     private func fetchCurrentWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {
         return currentWeatherUseCase.fetchCurrentWeather(with: latitude, longitude)
-    }
-    
-    private func fetchHourlyWeather(with latitude: Double, _ longitude: Double) -> Observable<[HourlyWeather]?> {
-        return forecastWeatherUseCase.fetchHourlyWeather(with: latitude, longitude)
-    }
-    
-    private func fetchDailyWeather(with latitude: Double, _ longitude: Double) -> Observable<[DailyWeather]?> {
-        return forecastWeatherUseCase.fetchDailyWeather(with: latitude, longitude)
     }
     
     private func fetchForecastWeather(with latitude: Double, _ longitude: Double) -> Observable<ForecastWeather?> {

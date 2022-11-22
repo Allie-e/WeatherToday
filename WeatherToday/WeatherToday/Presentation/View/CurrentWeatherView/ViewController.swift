@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         case daily
         
         
-        var columnCount: Int {
+        var column: Int {
             switch self {
             case .hourly:
                 return 4
@@ -76,7 +76,7 @@ class ViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        output.loadForecast
+        output.loadForecastWeather
             .subscribe(onNext: { weather in
                 guard let weather = weather else { return }
                 self.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
@@ -152,7 +152,7 @@ class ViewController: UIViewController {
             
             //group
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: sectionKind.columnCount)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: sectionKind.column)
             
             //section
             let section = NSCollectionLayoutSection(group: group)
@@ -194,15 +194,4 @@ class ViewController: UIViewController {
         
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
-    
-    //    private func configureSupplementaryViewRegistrationAndDataSource() {
-    //        dataSource?.supplementaryViewProvider = { [weak self] _, kind, indexPath in
-    //            switch kind {
-    //            case SupplementaryKind.header:
-    //                return self?.collectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryKind.header, withReuseIdentifier: "WeatherCollectionReusableView", for: indexPath)
-    //            default:
-    //                return UICollectionReusableView()
-    //            }
-    //        }
-    //    }
 }
