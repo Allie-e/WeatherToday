@@ -10,7 +10,7 @@ import RxSwift
 import CoreLocation
 
 
-final class CurrentWeatherViewModel: ViewModelDescribing {
+final class WeatherViewModel: ViewModelDescribing {
     final class Input {
         let loadLocation: Observable<[CLLocation]>
         

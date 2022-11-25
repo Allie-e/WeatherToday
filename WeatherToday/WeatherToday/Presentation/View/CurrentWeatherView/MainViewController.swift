@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 import RxSwift
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     private typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, WeatherItem>
     
     private enum WeatherItem: Hashable {
@@ -47,7 +47,7 @@ class ViewController: UIViewController {
     private var dataSource: DiffableDataSource?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherItem>()
     
-    let viewModel = CurrentWeatherViewModel()
+    let viewModel = WeatherViewModel()
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
     var locationManager: CLLocationManager!
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
     
     private func bind() {
         let location = locationManager.rx.didUpdateLocations
-        let input = CurrentWeatherViewModel.Input(loadLocation: location)
+        let input = WeatherViewModel.Input(loadLocation: location)
         let output = viewModel.transform(input)
         
         output.loadCurrentWeather
@@ -146,15 +146,12 @@ class ViewController: UIViewController {
                 return nil
             }
             
-            //item
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2), heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
-            //group
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: sectionKind.column)
             
-            //section
             let section = NSCollectionLayoutSection(group: group)
             section.orthogonalScrollingBehavior = sectionKind.orthogonalScrollingBehavior()
             
