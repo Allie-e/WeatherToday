@@ -42,6 +42,10 @@ class MainViewController: UIViewController {
         }
     }
     
+    private enum SupplementaryKind {
+        static let header = "header"
+    }
+    
     private let currentWeatherView = CurrentWeatherView()
     private var forecastCollectionView: UICollectionView!
     private var dataSource: DiffableDataSource?
@@ -59,6 +63,7 @@ class MainViewController: UIViewController {
         registerCollectionViewCell()
         addSubviews()
         setupDataSource()
+        setupCollectionViewHeader()
         setupCurrentWeatherViewLayout()
         setupLocationManager()
         bind()
@@ -146,18 +151,69 @@ class MainViewController: UIViewController {
                 return nil
             }
             
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2), heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: sectionKind.column)
-            
-            let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = sectionKind.orthogonalScrollingBehavior()
-            
-            return section
+            switch sectionKind {
+            case .hourly:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
+                                                      heightDimension: .absolute(110))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .absolute(100))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                               subitem: item,
+                                                               count: sectionKind.column)
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = sectionKind.orthogonalScrollingBehavior()
+                section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 10, trailing: 0)
+                
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .absolute(30)),
+                    elementKind: SupplementaryKind.header,
+                    alignment: .top)
+                section.boundarySupplementaryItems = [header]
+                
+                return section
+            case .daily:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
+                                                      heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .absolute(70))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                               subitem: item,
+                                                               count: sectionKind.column)
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = sectionKind.orthogonalScrollingBehavior()
+                section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0)
+                
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .absolute(30)),
+                    elementKind: SupplementaryKind.header,
+                    alignment: .top)
+                section.boundarySupplementaryItems = [header]
+                
+                return section
+            }
         }
         return layout
+    }
+    
+    private func setupCollectionViewHeader() {
+        forecastCollectionView.register(WeatherCollectionReusableView.self, forSupplementaryViewOfKind: SupplementaryKind.header, withReuseIdentifier: "WeatherCollectionReusableView")
+        
+        dataSource?.supplementaryViewProvider = { [weak self] (view, kind, indexPath) in
+            guard let header = self?.forecastCollectionView.dequeueReusableSupplementaryView(ofKind: SupplementaryKind.header, withReuseIdentifier: "WeatherCollectionReusableView", for: indexPath) as? WeatherCollectionReusableView else {
+                return nil
+            }
+            header.setupLabel(with: indexPath)
+            
+            return header
+        }
     }
     
     private func setupDataSource() {
