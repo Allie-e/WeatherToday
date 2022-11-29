@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailyTemperature {
+struct DailyTemperature: Hashable {
     let min: Double
     let max: Double
 }
