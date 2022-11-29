@@ -134,9 +134,6 @@ class MainViewController: UIViewController {
     private func setupCollectionView() {
         forecastCollectionView = UICollectionView(frame: .zero, collectionViewLayout: creatLayout())
         forecastCollectionView.backgroundColor = .clear
-        forecastCollectionView.layer.backgroundColor = (UIColor(red: 0.0784, green: 0.0784, blue: 0.4, alpha: 1.0).cgColor).copy(alpha: 0.2)
-        forecastCollectionView.layer.cornerRadius = 15
-        forecastCollectionView.layer.masksToBounds = true
         forecastCollectionView.showsVerticalScrollIndicator = false
     }
     
@@ -146,7 +143,10 @@ class MainViewController: UIViewController {
     }
     
     private func creatLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout{ sectionIndex, _ -> NSCollectionLayoutSection? in
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 15
+        
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ -> NSCollectionLayoutSection? in
             guard let sectionKind = Section(rawValue: sectionIndex) else {
                 return nil
             }
@@ -158,14 +158,14 @@ class MainViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                       heightDimension: .absolute(100))
+                                                       heightDimension: .absolute(110))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                                subitem: item,
                                                                count: sectionKind.column)
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = sectionKind.orthogonalScrollingBehavior()
-                section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 10, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0)
                 
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
@@ -173,6 +173,7 @@ class MainViewController: UIViewController {
                     elementKind: SupplementaryKind.header,
                     alignment: .top)
                 section.boundarySupplementaryItems = [header]
+                section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "CollectionBackgroundReusableView")]
                 
                 return section
             case .daily:
@@ -196,10 +197,15 @@ class MainViewController: UIViewController {
                     elementKind: SupplementaryKind.header,
                     alignment: .top)
                 section.boundarySupplementaryItems = [header]
+                section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "CollectionBackgroundReusableView")]
                 
                 return section
             }
-        }
+        },
+        configuration: config)
+        
+        layout.register(CollectionBackgroundReusableView.self, forDecorationViewOfKind: "CollectionBackgroundReusableView")
+        
         return layout
     }
     
