@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 import RxSwift
 
-class MainViewController: UIViewController {
+class CurrentWeatherViewController: UIViewController {
     private typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, WeatherItem>
     
     private enum WeatherItem: Hashable {
@@ -58,7 +58,8 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViewControllerLayer()
+//        setupViewControllerLayer()
+//        view.backgroundColor = .clear
         setupCollectionView()
         registerCollectionViewCell()
         addSubviews()
