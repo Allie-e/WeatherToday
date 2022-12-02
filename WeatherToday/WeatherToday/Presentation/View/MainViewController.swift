@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class MainViewController: UIViewController {
     private var viewControllerList = [CurrentWeatherViewController()]
@@ -17,9 +18,34 @@ class MainViewController: UIViewController {
         pageControl.currentPageIndicatorTintColor = .white
         pageControl.pageIndicatorTintColor = .white.withAlphaComponent(0.3)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.numberOfPages = 1
+        pageControl.isUserInteractionEnabled = false
         
         return pageControl
     }()
+    
+    private let linkBarButton: UIBarButtonItem = {
+        let githubImage = UIImage(named: "GitHub-Mark")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let barButtonItem = UIBarButtonItem(image: githubImage,
+                                            style: .plain,
+                                            target: self,
+                                            action: nil)
+        barButtonItem.tintColor = .white
+        
+        return barButtonItem
+    }()
+    
+    private let listBarButton: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"),
+                                            style: .plain,
+                                            target: self,
+                                            action: nil)
+        barButtonItem.tintColor = .white
+        
+        return barButtonItem
+    }()
+    
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +54,16 @@ class MainViewController: UIViewController {
         setupLayout()
         setupToolBar()
         setupPageViewController()
+        bind()
+    }
+    
+    private func bind() {
+        linkBarButton.rx.tap
+            .bind {
+                let url = URL(string: "https://github.com/Allie-e/WeatherToday")!
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func addSubviews() {
@@ -70,25 +106,13 @@ class MainViewController: UIViewController {
                                               animated: true,
                                               completion: nil)
         
-        
         pageViewController.didMove(toParent: self)        
         pageViewController.dataSource = self
         pageViewController.delegate = self
     }
     
     private func setupToolBar() {
-        let githubImage = UIImage(named: "GitHub-Mark")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        let linkButton = UIBarButtonItem(image: githubImage,
-                                         style: .plain,
-                                         target: self,
-                                         action: nil)
-        linkButton.tintColor = .white
         let pageControl = UIBarButtonItem(customView: pageControl)
-        let listButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"),
-                                         style: .plain,
-                                         target: self,
-                                         action: nil)
-        listButton.tintColor = .white
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
                                             target: self,
                                             action: nil)
@@ -96,7 +120,7 @@ class MainViewController: UIViewController {
         toolBar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolBar.backgroundColor = .clear
         toolBar.tintColor = .white
-        toolBar.setItems([linkButton, flexibleSpace, pageControl, flexibleSpace, listButton],
+        toolBar.setItems([linkBarButton, flexibleSpace, pageControl, flexibleSpace, listBarButton],
                          animated: true)
         toolBar.isHidden = false
     }

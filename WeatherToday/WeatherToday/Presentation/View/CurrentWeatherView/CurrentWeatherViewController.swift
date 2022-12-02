@@ -58,8 +58,6 @@ class CurrentWeatherViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupViewControllerLayer()
-//        view.backgroundColor = .clear
         setupCollectionView()
         registerCollectionViewCell()
         addSubviews()
