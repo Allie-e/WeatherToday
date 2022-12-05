@@ -64,6 +64,14 @@ class MainViewController: UIViewController {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
             .disposed(by: disposeBag)
+        
+        listBarButton.rx.tap
+            .bind {
+                let searchNavigationController = UINavigationController(rootViewController: SearchLocationViewController())
+                searchNavigationController.modalPresentationStyle = .fullScreen
+                self.present(searchNavigationController, animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func addSubviews() {
