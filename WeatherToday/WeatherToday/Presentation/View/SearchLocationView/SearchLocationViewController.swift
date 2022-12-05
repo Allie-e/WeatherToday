@@ -8,6 +8,10 @@
 import UIKit
 
 class SearchLocationViewController: UIViewController {
+    private enum Section: CaseIterable {
+        case location
+    }
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "날씨"
@@ -29,12 +33,18 @@ class SearchLocationViewController: UIViewController {
         return searchController
     }()
     
-
+    private let locationListView = LocationListView()
+    private var dataSource: UITableViewDiffableDataSource<Section, CurrentWeather>?
+    private var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
-        setupView()
         setUpSearchController()
+        addSubviews()
+        setupLayout()
+        registerTableViewCell()
+        setupDataSource()
     }
     
     private func setupNavigationBar() {
@@ -50,13 +60,43 @@ class SearchLocationViewController: UIViewController {
         self.navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    private func setupView() {
-        view.backgroundColor = .black
-    }
-    
     private func setUpSearchController() {
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
+    }
+    
+    private func addSubviews() {
+        view.addSubview(locationListView)
+    }
+    
+    private func setupLayout() {
+        view.backgroundColor = .black
+        locationListView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+
+    private func registerTableViewCell() {
+        locationListView.register(LocationListTableViewCell.self, forCellReuseIdentifier: "LocationListTableViewCell")
+    }
+    
+    private func setupDataSource() {
+        dataSource = UITableViewDiffableDataSource<Section, CurrentWeather>(tableView: locationListView, cellProvider: { (tableView, indexPath, item) -> LocationListTableViewCell in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "LocationListTableViewCell", for: indexPath) as? LocationListTableViewCell else {
+                return LocationListTableViewCell()
+            }
+            cell.setupLocationListCell(with: item)
+            
+            return cell
+        })
+        locationListView.dataSource = dataSource
+    }
+    
+    private func applySnapShot(with weather: [CurrentWeather]) {
+        snapshot.appendSections([.location])
+        snapshot.appendItems(weather, toSection: .location)
+        snapshot.reloadItems(weather)
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }
 
