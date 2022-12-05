@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CurrentWeather {
+struct CurrentWeather: Hashable {
     let coord: Coordinate
     let weather: [Weather]
     let temperature: Temperature
