@@ -394,11 +394,11 @@
 			children = (
 				FBEFD7D528FFFF1B00CC50DE /* CurrentWeatherViewController.swift */,
 				FBEFD8292906C26300CC50DE /* CurrentWeatherView.swift */,
-				FB90119F290823A300228B35 /* WeatherViewModel.swift */,
 				FB9011C1291B94E500228B35 /* HourlyWeatherCollectionViewCell.swift */,
 				FB5432AC2923C4EC00C5FBD0 /* DailyWeatherCollectionViewCell.swift */,
 				FB5432B72930E66600C5FBD0 /* WeatherCollectionReusableView.swift */,
 				FB81D82D29362E2400C4E6FF /* CollectionBackgroundReusableView.swift */,
+				FB90119F290823A300228B35 /* WeatherViewModel.swift */,
 			);
 			path = CurrentWeatherView;
 			sourceTree = "<group>";

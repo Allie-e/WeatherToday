@@ -20,6 +20,7 @@ final class LocationListTableViewCell: UITableViewCell {
         label.font = .preferredFont(forTextStyle: .title3)
         label.textAlignment = .left
         label.textColor = .white
+        label.sizeToFit()
         
         return label
     }()
@@ -29,15 +30,27 @@ final class LocationListTableViewCell: UITableViewCell {
         label.font = .preferredFont(forTextStyle: .title1)
         label.textAlignment = .right
         label.textColor = .white
+        label.sizeToFit()
+        
+        return label
+    }()
+    
+    private let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .caption1)
+        label.textColor = .systemGray3
+        label.textAlignment = .right
+        label.sizeToFit()
         
         return label
     }()
     
     private let temperatureLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = .preferredFont(forTextStyle: .caption1)
         label.textAlignment = .right
         label.textColor = .white
+        label.sizeToFit()
         
         return label
     }()
@@ -46,43 +59,58 @@ final class LocationListTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubviews()
         setupLayout()
+        setupCell()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setupLocationListCell(with data: CurrentWeather) {
+        nameLabel.text = data.name
+        currentWeatherLabel.text = "\(data.temperature.current.toRoundedString())°"
+        descriptionLabel.text = data.weather.first?.weatherDescription
+        temperatureLabel.text = "최고: \(data.temperature.max.toRoundedString())° 최저: \(data.temperature.min.toRoundedString())°"
+    }
+    
     private func addSubviews() {
         contentView.addSubview(containerView)
-        [nameLabel, currentWeatherLabel, temperatureLabel].forEach { view in
+        [nameLabel, currentWeatherLabel, descriptionLabel, temperatureLabel].forEach { view in
             containerView.addSubview(view)
         }
     }
     
     private func setupLayout() {
         containerView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalToSuperview().inset(10)
         }
         
         nameLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview()
+            make.height.equalTo(30)
         }
         
         currentWeatherLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.trailing.equalToSuperview()
+            make.height.equalTo(30)
+        }
+        
+        descriptionLabel.snp.makeConstraints { make in
+            make.top.equalTo(nameLabel.snp.bottom).offset(10)
+            make.bottom.leading.equalToSuperview()
         }
         
         temperatureLabel.snp.makeConstraints { make in
             make.top.equalTo(currentWeatherLabel.snp.bottom).offset(10)
-            make.trailing.equalToSuperview()
+            make.bottom.trailing.equalToSuperview()
         }
     }
     
-    func setupLocationListCell(with data: CurrentWeather) {
-        nameLabel.text = data.name
-        currentWeatherLabel.text = "\(data.temperature.current.toRoundedString())°"
-        temperatureLabel.text = "최고: \(data.temperature.max.toRoundedString())° 최저: \(data.temperature.min.toRoundedString())°"
+    private func setupCell() {
+        self.backgroundColor = UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0)
+        self.layer.cornerRadius = 15
+        self.layer.masksToBounds = true
     }
 }

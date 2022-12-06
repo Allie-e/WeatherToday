@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import CoreLocation
 
 class SearchLocationViewController: UIViewController {
     private enum Section: CaseIterable {
@@ -37,6 +39,11 @@ class SearchLocationViewController: UIViewController {
     private var dataSource: UITableViewDiffableDataSource<Section, CurrentWeather>?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
     
+    let viewModel = WeatherViewModel()
+    let viewDidLoadObservable: PublishSubject<Coordinate> = .init()
+    let disposeBag: DisposeBag = .init()
+    var locationManager: CLLocationManager!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
@@ -45,6 +52,28 @@ class SearchLocationViewController: UIViewController {
         setupLayout()
         registerTableViewCell()
         setupDataSource()
+        setupLocationManager()
+        bind()
+    }
+    
+    private func bind() {
+        let location = locationManager.rx.didUpdateLocations
+        let input = WeatherViewModel.Input(loadLocation: location)
+        let output = viewModel.transform(input)
+        
+        output.loadCurrentWeather
+            .subscribe(onNext: { weather in
+                guard let weather = weather else { return }
+                self.applySnapShot(with: weather)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func setupLocationManager() {
+        locationManager = CLLocationManager()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
     private func setupNavigationBar() {
@@ -92,10 +121,11 @@ class SearchLocationViewController: UIViewController {
         locationListView.dataSource = dataSource
     }
     
-    private func applySnapShot(with weather: [CurrentWeather]) {
+    private func applySnapShot(with weather: CurrentWeather) {
+        snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
         snapshot.appendSections([.location])
-        snapshot.appendItems(weather, toSection: .location)
-        snapshot.reloadItems(weather)
+        snapshot.appendItems([weather], toSection: .location)
+        snapshot.reloadItems([weather])
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }

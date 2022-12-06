@@ -9,7 +9,6 @@ import Foundation
 import RxSwift
 import CoreLocation
 
-
 final class WeatherViewModel: ViewModelDescribing {
     final class Input {
         let loadLocation: Observable<[CLLocation]>
