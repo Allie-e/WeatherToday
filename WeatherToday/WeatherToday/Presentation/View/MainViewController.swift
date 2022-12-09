@@ -67,9 +67,9 @@ class MainViewController: UIViewController {
         
         listBarButton.rx.tap
             .bind {
-                let searchNavigationController = UINavigationController(rootViewController: SearchLocationViewController())
-                searchNavigationController.modalPresentationStyle = .fullScreen
-                self.present(searchNavigationController, animated: true)
+                let locationListNavigationController = UINavigationController(rootViewController: LocationListViewController())
+                locationListNavigationController.modalPresentationStyle = .fullScreen
+                self.present(locationListNavigationController, animated: true)
             }
             .disposed(by: disposeBag)
     }

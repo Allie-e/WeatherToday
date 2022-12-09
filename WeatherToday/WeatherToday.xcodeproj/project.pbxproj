@@ -14,10 +14,9 @@
 		FB5432B3292B95D000C5FBD0 /* CALayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5432B2292B95D000C5FBD0 /* CALayer+Extension.swift */; };
 		FB5432B82930E66600C5FBD0 /* WeatherCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5432B72930E66600C5FBD0 /* WeatherCollectionReusableView.swift */; };
 		FB81D82E29362E2400C4E6FF /* CollectionBackgroundReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D82D29362E2400C4E6FF /* CollectionBackgroundReusableView.swift */; };
-		FB81D83629364D0D00C4E6FF /* SearchLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D83529364D0D00C4E6FF /* SearchLocationViewController.swift */; };
+		FB81D83629364D0D00C4E6FF /* LocationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D83529364D0D00C4E6FF /* LocationListViewController.swift */; };
 		FB81D838293777F200C4E6FF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D837293777F200C4E6FF /* MainViewController.swift */; };
 		FB81D83C293E036D00C4E6FF /* LocationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D83B293E036D00C4E6FF /* LocationListTableViewCell.swift */; };
-		FB81D842293E1B3800C4E6FF /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D841293E1B3800C4E6FF /* LocationListView.swift */; };
 		FB81D8462943178E00C4E6FF /* LocationListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D8452943178E00C4E6FF /* LocationListViewModel.swift */; };
 		FB81D8482943419B00C4E6FF /* LocationListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D8472943419B00C4E6FF /* LocationListUseCase.swift */; };
 		FB81D84C2943645E00C4E6FF /* SearchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB81D84B2943645E00C4E6FF /* SearchListTableViewCell.swift */; };
@@ -95,10 +94,9 @@
 		FB5432B2292B95D000C5FBD0 /* CALayer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Extension.swift"; sourceTree = "<group>"; };
 		FB5432B72930E66600C5FBD0 /* WeatherCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionReusableView.swift; sourceTree = "<group>"; };
 		FB81D82D29362E2400C4E6FF /* CollectionBackgroundReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionBackgroundReusableView.swift; sourceTree = "<group>"; };
-		FB81D83529364D0D00C4E6FF /* SearchLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationViewController.swift; sourceTree = "<group>"; };
+		FB81D83529364D0D00C4E6FF /* LocationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListViewController.swift; sourceTree = "<group>"; };
 		FB81D837293777F200C4E6FF /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		FB81D83B293E036D00C4E6FF /* LocationListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListTableViewCell.swift; sourceTree = "<group>"; };
-		FB81D841293E1B3800C4E6FF /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
 		FB81D8452943178E00C4E6FF /* LocationListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListViewModel.swift; sourceTree = "<group>"; };
 		FB81D8472943419B00C4E6FF /* LocationListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListUseCase.swift; sourceTree = "<group>"; };
 		FB81D84B2943645E00C4E6FF /* SearchListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListTableViewCell.swift; sourceTree = "<group>"; };
@@ -203,9 +201,8 @@
 		FB81D83229364C2D00C4E6FF /* SearchLocationView */ = {
 			isa = PBXGroup;
 			children = (
-				FB81D83529364D0D00C4E6FF /* SearchLocationViewController.swift */,
+				FB81D83529364D0D00C4E6FF /* LocationListViewController.swift */,
 				FB81D83B293E036D00C4E6FF /* LocationListTableViewCell.swift */,
-				FB81D841293E1B3800C4E6FF /* LocationListView.swift */,
 				FB81D8452943178E00C4E6FF /* LocationListViewModel.swift */,
 				FB81D84B2943645E00C4E6FF /* SearchListTableViewCell.swift */,
 			);
@@ -702,9 +699,8 @@
 				FB9011AE2915023F00228B35 /* HourlyWeatherDTO.swift in Sources */,
 				FB5432B3292B95D000C5FBD0 /* CALayer+Extension.swift in Sources */,
 				FB9011C2291B94E500228B35 /* HourlyWeatherCollectionViewCell.swift in Sources */,
-				FB81D842293E1B3800C4E6FF /* LocationListView.swift in Sources */,
 				FB81D83C293E036D00C4E6FF /* LocationListTableViewCell.swift in Sources */,
-				FB81D83629364D0D00C4E6FF /* SearchLocationViewController.swift in Sources */,
+				FB81D83629364D0D00C4E6FF /* LocationListViewController.swift in Sources */,
 				FBEFD80D2902D82700CC50DE /* CurrentWeatherDTO.swift in Sources */,
 				FBEFD8182905263B00CC50DE /* CoordinateDTO.swift in Sources */,
 				FB9011B02915049C00228B35 /* DailyWeatherDTO.swift in Sources */,

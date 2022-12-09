@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import CoreLocation
 
-class SearchLocationViewController: UIViewController {
+class LocationListViewController: UIViewController {
     private enum Section: CaseIterable {
         case location
     }
@@ -23,19 +23,13 @@ class SearchLocationViewController: UIViewController {
         return label
     }()
     
-    private let searchController: UISearchController = {
-        let searchController = UISearchController()
-        searchController.searchBar.placeholder = "도시 또는 공항 검색"
-        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.searchTextField.layer.cornerRadius = 20
-        searchController.searchBar.searchTextField.layer.masksToBounds = true
-        searchController.searchBar.tintColor = .white
+    private let locationListView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.backgroundColor = .clear
         
-        return searchController
+        return tableView
     }()
     
-    private let locationListView = LocationListView()
     private var dataSource: UITableViewDiffableDataSource<Section, CurrentWeather>?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
     
@@ -47,13 +41,17 @@ class SearchLocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
-        setUpSearchController()
-        addSubviews()
+        initView()
         setupLayout()
         registerTableViewCell()
         setupDataSource()
         setupLocationManager()
         bind()
+    }
+    
+    private func initView() {
+        view.backgroundColor = .black
+        view.addSubview(locationListView)
     }
     
     private func bind() {
@@ -77,34 +75,23 @@ class SearchLocationViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        let filterImage = UIImage(systemName: "ellipsis.circle")
-        let filterButton = UIBarButtonItem(image: filterImage,
+        let searchImage = UIImage(systemName: "magnifyingglass")
+        let searchButton = UIBarButtonItem(image: searchImage,
                                            style: .plain,
                                            target: self,
                                            action: nil)
-        filterButton.tintColor = .white
+        searchButton.tintColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
-        navigationItem.rightBarButtonItem = filterButton
-        self.navigationItem.searchController = searchController
-        self.navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
-    private func setUpSearchController() {
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-    }
-    
-    private func addSubviews() {
-        view.addSubview(locationListView)
+        navigationItem.rightBarButtonItem = searchButton
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     private func setupLayout() {
-        view.backgroundColor = .black
         locationListView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-
+    
     private func registerTableViewCell() {
         locationListView.register(LocationListTableViewCell.self, forCellReuseIdentifier: "LocationListTableViewCell")
     }
@@ -127,15 +114,5 @@ class SearchLocationViewController: UIViewController {
         snapshot.appendItems([weather], toSection: .location)
         snapshot.reloadItems([weather])
         dataSource?.apply(snapshot, animatingDifferences: true)
-    }
-}
-
-extension SearchLocationViewController: UISearchResultsUpdating, UISearchBarDelegate {
-    func updateSearchResults(for searchController: UISearchController) {
-        
-    }
-
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-
     }
 }
