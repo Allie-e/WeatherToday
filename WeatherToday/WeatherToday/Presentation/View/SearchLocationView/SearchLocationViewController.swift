@@ -39,8 +39,8 @@ class SearchLocationViewController: UIViewController {
     private var dataSource: UITableViewDiffableDataSource<Section, CurrentWeather>?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
     
-    let viewModel = WeatherViewModel()
-    let viewDidLoadObservable: PublishSubject<Coordinate> = .init()
+    let viewModel = LocationListViewModel()
+    let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
     var locationManager: CLLocationManager!
     
@@ -58,7 +58,7 @@ class SearchLocationViewController: UIViewController {
     
     private func bind() {
         let location = locationManager.rx.didUpdateLocations
-        let input = WeatherViewModel.Input(loadLocation: location)
+        let input = LocationListViewModel.Input(loadLocation: location)
         let output = viewModel.transform(input)
         
         output.loadCurrentWeather
