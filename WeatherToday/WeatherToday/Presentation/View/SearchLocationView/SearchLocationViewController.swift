@@ -30,7 +30,7 @@ class SearchLocationViewController: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.searchTextField.layer.cornerRadius = 20
         searchController.searchBar.searchTextField.layer.masksToBounds = true
-        searchController.searchBar.tintColor = .label
+        searchController.searchBar.tintColor = .white
         
         return searchController
     }()
