@@ -30,6 +30,17 @@ class LocationListViewController: UIViewController {
         return tableView
     }()
     
+    private let searchButton: UIBarButtonItem = {
+        let searchImage = UIImage(systemName: "magnifyingglass")
+        let button = UIBarButtonItem(image: searchImage,
+                                     style: .plain,
+                                     target: self,
+                                     action: nil)
+        button.tintColor = .white
+        
+        return button
+    }()
+    
     private var dataSource: UITableViewDiffableDataSource<Section, CurrentWeather>?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
     
@@ -47,6 +58,7 @@ class LocationListViewController: UIViewController {
         setupDataSource()
         setupLocationManager()
         bind()
+        bindSearchButton()
     }
     
     private func initView() {
@@ -67,6 +79,16 @@ class LocationListViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
+    private func bindSearchButton() {
+        searchButton.rx.tap
+            .bind {
+                let searchNavigationController = UINavigationController(rootViewController: SearchLocationViewController())
+                searchNavigationController.modalPresentationStyle = .fullScreen
+                self.present(searchNavigationController, animated: true)
+            }
+            .disposed(by: disposeBag)
+    }
+    
     private func setupLocationManager() {
         locationManager = CLLocationManager()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -75,12 +97,6 @@ class LocationListViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        let searchImage = UIImage(systemName: "magnifyingglass")
-        let searchButton = UIBarButtonItem(image: searchImage,
-                                           style: .plain,
-                                           target: self,
-                                           action: nil)
-        searchButton.tintColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
         navigationItem.rightBarButtonItem = searchButton
         navigationItem.hidesSearchBarWhenScrolling = false
