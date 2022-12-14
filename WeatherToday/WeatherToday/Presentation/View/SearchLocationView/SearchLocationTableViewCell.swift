@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class SearchListTableViewCell: UITableViewCell {
+final class SearchLocationTableViewCell: UITableViewCell {
     private let namelabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)
