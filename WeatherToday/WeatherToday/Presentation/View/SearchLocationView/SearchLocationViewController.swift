@@ -11,6 +11,10 @@ import RxSwift
 import RxCocoa
 
 class SearchLocationViewController: UIViewController {
+    private enum Section: CaseIterable {
+        case location
+    }
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "검색"
@@ -20,7 +24,7 @@ class SearchLocationViewController: UIViewController {
         return label
     }()
     
-    private let searchListTableView: UITableView = {
+    private let searchLocationTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.backgroundColor = .black
         
@@ -40,22 +44,22 @@ class SearchLocationViewController: UIViewController {
         return searchController
     }()
     
+    private var dataSource: UITableViewDiffableDataSource<Section, MKLocalSearchCompletion>?
+    private var snapshot = NSDiffableDataSourceSnapshot<Section, MKLocalSearchCompletion>()
     private var searchCompleter = MKLocalSearchCompleter()
     private var searchResults = [MKLocalSearchCompletion]()
-    private var searchRegion: MKCoordinateRegion = MKCoordinateRegion(MKMapRect.world)
-    private var placeMark: MKPlacemark?
-    var relay = PublishRelay<[MKLocalSearchCompletion]>()
     private let disposeBag: DisposeBag = .init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bindSearchController()
+        bindTableView()
         initView()
+        setupNavigationBar()
         setupLayout()
         setupSearchCompleter()
-        setTableViewDelegateAndDataSource()
-        setupNavigationBar()
         registerTableViewCell()
-        bindSearchController()
+        setupDataSource()
     }
     
     private func bindSearchController() {
@@ -66,9 +70,10 @@ class SearchLocationViewController: UIViewController {
             .subscribe(onNext: { _, searchText in
                 if searchText == "" {
                     self.searchResults.removeAll()
-                    self.searchListTableView.reloadData()
+                    self.searchLocationTableView.reloadData()
                 }
                 self.searchCompleter.queryFragment = searchText
+                self.applySnapShot(with: self.searchResults)
             })
             .disposed(by: disposeBag)
         
@@ -80,68 +85,16 @@ class SearchLocationViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func initView() {
-        view.addSubview(searchListTableView)
+    private func bindTableView() {
+        searchLocationTableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                self?.searchLocationTableView.deselectRow(at: indexPath, animated: true)
+                self?.searchLocation(with: indexPath)
+            })
+            .disposed(by: disposeBag)
     }
     
-    private func setupSearchCompleter() {
-        searchCompleter.delegate = self
-        searchCompleter.resultTypes = .address
-    }
-    
-    private func setTableViewDelegateAndDataSource() {
-        searchListTableView.dataSource = self
-        searchListTableView.delegate = self
-    }
-    
-    private func registerTableViewCell() {
-        searchListTableView.register(SearchLocationTableViewCell.self, forCellReuseIdentifier: "SearchListTableViewCell")
-    }
-    
-    private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
-        navigationItem.searchController = searchController
-        navigationItem.searchController?.searchBar.searchTextField.textColor = .white
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
-    private func setupLayout() {
-        searchListTableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-    }
-}
-
-extension SearchLocationViewController: MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        searchResults = completer.results
-        searchListTableView.reloadData()
-    }
-    
-    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        print(error.localizedDescription)
-    }
-}
-
-extension SearchLocationViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        searchResults.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = searchListTableView.dequeueReusableCell(withIdentifier: "SearchListTableViewCell", for: indexPath) as? SearchLocationTableViewCell else {
-            return SearchLocationTableViewCell()
-        }
-        let searchResult = searchResults[indexPath.row].title
-        cell.setupCell(with: searchResult)
-        cell.selectionStyle = .none
-
-        return cell
-    }
-}
-
-extension SearchLocationViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    private func searchLocation(with indexPath: IndexPath) {
         let selectedResult = searchResults[indexPath.row]
         let searchRequest = MKLocalSearch.Request(completion: selectedResult)
         let search = MKLocalSearch(request: searchRequest)
@@ -157,7 +110,60 @@ extension SearchLocationViewController: UITableViewDelegate {
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        searchController.searchBar.resignFirstResponder()
+    private func initView() {
+        view.addSubview(searchLocationTableView)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
+        navigationItem.searchController = searchController
+        navigationItem.searchController?.searchBar.searchTextField.textColor = .white
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    private func setupLayout() {
+        searchLocationTableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    
+    private func setupSearchCompleter() {
+        searchCompleter.delegate = self
+        searchCompleter.resultTypes = .address
+    }
+    
+    private func registerTableViewCell() {
+        searchLocationTableView.register(SearchLocationTableViewCell.self, forCellReuseIdentifier: "SearchLocationTableViewCell")
+    }
+    
+    private func setupDataSource() {
+        dataSource = UITableViewDiffableDataSource<Section, MKLocalSearchCompletion>(tableView: searchLocationTableView, cellProvider: { (tableView, indexPath, item) -> SearchLocationTableViewCell in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchLocationTableViewCell", for: indexPath) as? SearchLocationTableViewCell else {
+                return SearchLocationTableViewCell()
+            }
+            cell.setupCell(with: item.title)
+            
+            return cell
+        })
+        searchLocationTableView.dataSource = dataSource
+    }
+    
+    private func applySnapShot(with weather: [MKLocalSearchCompletion]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MKLocalSearchCompletion>()
+        snapshot.appendSections([.location])
+        snapshot.appendItems(weather, toSection: .location)
+        snapshot.reloadItems(weather)
+        dataSource?.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+extension SearchLocationViewController: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        searchResults = completer.results
+        searchLocationTableView.reloadData()
+    }
+    
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        print(error.localizedDescription)
     }
 }
