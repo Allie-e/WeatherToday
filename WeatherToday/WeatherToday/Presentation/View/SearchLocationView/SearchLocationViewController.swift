@@ -87,9 +87,9 @@ class SearchLocationViewController: UIViewController {
     
     private func bindTableView() {
         searchLocationTableView.rx.itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                self?.searchLocationTableView.deselectRow(at: indexPath, animated: true)
-                self?.searchLocation(with: indexPath)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                self.showAlert(title: "새로운 도시를 추가 하시겠습니까?")
             })
             .disposed(by: disposeBag)
     }
@@ -154,6 +154,19 @@ class SearchLocationViewController: UIViewController {
         snapshot.appendItems(weather, toSection: .location)
         snapshot.reloadItems(weather)
         dataSource?.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func showAlert(title: String, message: String? = nil) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+            self.dismiss(animated: true, completion: nil)
+        }
+        alertController.addAction(okAction)
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 

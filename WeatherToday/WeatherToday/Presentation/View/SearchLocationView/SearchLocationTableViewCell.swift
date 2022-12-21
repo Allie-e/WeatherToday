@@ -34,6 +34,7 @@ final class SearchLocationTableViewCell: UITableViewCell {
     private func initView() {
         backgroundColor = .black
         contentView.addSubview(namelabel)
+        selectionStyle = .none
     }
     
     private func setupLayout() {

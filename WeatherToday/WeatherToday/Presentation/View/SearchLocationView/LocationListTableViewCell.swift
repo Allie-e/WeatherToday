@@ -109,8 +109,9 @@ final class LocationListTableViewCell: UITableViewCell {
     }
     
     private func setupCell() {
-        self.backgroundColor = UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0)
-        self.layer.cornerRadius = 15
-        self.layer.masksToBounds = true
+        backgroundColor = UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0)
+        layer.cornerRadius = 15
+        layer.masksToBounds = true
+        selectionStyle = .none
     }
 }
