@@ -8,8 +8,11 @@
 import UIKit
 import RxSwift
 import CoreLocation
+import RxRelay
 
 class LocationListViewController: UIViewController {
+    private typealias DiffableDataSource = UITableViewDiffableDataSource<Section, CurrentWeather>
+    
     private enum Section: CaseIterable {
         case location
     }
@@ -41,13 +44,14 @@ class LocationListViewController: UIViewController {
         return button
     }()
     
-    private var dataSource: UITableViewDiffableDataSource<Section, CurrentWeather>?
+    private var dataSource: DiffableDataSource?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
     
     let viewModel = LocationListViewModel()
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
     var locationManager: CLLocationManager!
+    let coordinateRelay: PublishRelay<Coordinate> = .init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,21 +72,33 @@ class LocationListViewController: UIViewController {
     
     private func bind() {
         let location = locationManager.rx.didUpdateLocations
-        let input = LocationListViewModel.Input(loadLocation: location)
+        let input = LocationListViewModel.Input(loadLocation: location, addNewLocation: coordinateRelay.asObservable())
         let output = viewModel.transform(input)
         
         output.loadCurrentWeather
-            .subscribe(onNext: { weather in
+            .withUnretained(self)
+            .subscribe(onNext: { _, weather in
                 guard let weather = weather else { return }
-                self.applySnapShot(with: weather)
+                self.applySnapShot(with: [weather])
+            })
+            .disposed(by: disposeBag)
+        
+        output.addNewWeather
+            .withUnretained(self)
+            .subscribe(onNext: { _, weather in
+                guard let weather = weather else { return }
+                self.applySnapShot(with: [weather])
             })
             .disposed(by: disposeBag)
     }
     
     private func bindSearchButton() {
         searchButton.rx.tap
-            .bind {
-                let searchNavigationController = UINavigationController(rootViewController: SearchLocationViewController())
+            .withUnretained(self)
+            .bind { _ in 
+                let searchVC = SearchLocationViewController()
+                searchVC.coordinateRelay = self.coordinateRelay
+                let searchNavigationController = UINavigationController(rootViewController: searchVC)
                 searchNavigationController.modalPresentationStyle = .fullScreen
                 self.present(searchNavigationController, animated: true)
             }
@@ -113,7 +129,7 @@ class LocationListViewController: UIViewController {
     }
     
     private func setupDataSource() {
-        dataSource = UITableViewDiffableDataSource<Section, CurrentWeather>(tableView: locationListView, cellProvider: { (tableView, indexPath, item) -> LocationListTableViewCell in
+        dataSource = DiffableDataSource(tableView: locationListView, cellProvider: { (tableView, indexPath, item) -> LocationListTableViewCell in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "LocationListTableViewCell", for: indexPath) as? LocationListTableViewCell else {
                 return LocationListTableViewCell()
             }
@@ -124,11 +140,11 @@ class LocationListViewController: UIViewController {
         locationListView.dataSource = dataSource
     }
     
-    private func applySnapShot(with weather: CurrentWeather) {
+    private func applySnapShot(with weather: [CurrentWeather]) {
         snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
         snapshot.appendSections([.location])
-        snapshot.appendItems([weather], toSection: .location)
-        snapshot.reloadItems([weather])
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        snapshot.appendItems(weather, toSection: .location)
+        snapshot.reloadItems(weather)
+        dataSource?.apply(snapshot)
     }
 }

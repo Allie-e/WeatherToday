@@ -49,6 +49,7 @@ class SearchLocationViewController: UIViewController {
     private var searchCompleter = MKLocalSearchCompleter()
     private var searchResults = [MKLocalSearchCompletion]()
     private let disposeBag: DisposeBag = .init()
+    var coordinateRelay: PublishRelay<Coordinate>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,13 +68,13 @@ class SearchLocationViewController: UIViewController {
             .orEmpty
             .distinctUntilChanged()
             .withUnretained(self)
-            .subscribe(onNext: { _, searchText in
+            .subscribe(onNext: { owner, searchText in
                 if searchText == "" {
-                    self.searchResults.removeAll()
-                    self.searchLocationTableView.reloadData()
+                    owner.searchResults.removeAll()
+                    owner.searchLocationTableView.reloadData()
                 }
-                self.searchCompleter.queryFragment = searchText
-                self.applySnapShot(with: self.searchResults)
+                owner.searchCompleter.queryFragment = searchText
+                owner.applySnapShot(with: self.searchResults)
             })
             .disposed(by: disposeBag)
         
@@ -87,27 +88,15 @@ class SearchLocationViewController: UIViewController {
     
     private func bindTableView() {
         searchLocationTableView.rx.itemSelected
+            .withUnretained(self)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { _ in
-                self.showAlert(title: "새로운 도시를 추가 하시겠습니까?")
+            .flatMap({ owner, indexPath in
+                owner.searchLocation(with: indexPath)
+            })
+            .subscribe(onNext: { indexPath in
+                self.showAlert(title: "새로운 도시를 추가 하시겠습니까?", location: indexPath)
             })
             .disposed(by: disposeBag)
-    }
-    
-    private func searchLocation(with indexPath: IndexPath) {
-        let selectedResult = searchResults[indexPath.row]
-        let searchRequest = MKLocalSearch.Request(completion: selectedResult)
-        let search = MKLocalSearch(request: searchRequest)
-        search.start { reponse, error in
-            guard error == nil else {
-                print(error?.localizedDescription)
-                return
-            }
-            guard let placeMark = reponse?.mapItems[0].placemark else {
-                return
-            }
-            let coordinate = Coordinate(latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
-        }
     }
     
     private func initView() {
@@ -148,18 +137,24 @@ class SearchLocationViewController: UIViewController {
         searchLocationTableView.dataSource = dataSource
     }
     
-    private func applySnapShot(with weather: [MKLocalSearchCompletion]) {
+    private func applySnapShot(with location: [MKLocalSearchCompletion]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, MKLocalSearchCompletion>()
         snapshot.appendSections([.location])
-        snapshot.appendItems(weather, toSection: .location)
-        snapshot.reloadItems(weather)
+        snapshot.appendItems(location, toSection: .location)
+        snapshot.reloadItems(location)
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
-    private func showAlert(title: String, message: String? = nil) {
+    private func showAlert(title: String, message: String? = nil, location: Coordinate?) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "확인", style: .default) { _ in
-            self.dismiss(animated: true, completion: nil)
+            guard let location = location else {
+                return
+            }
+            self.coordinateRelay?.accept(location)
+            self.presentingViewController?.dismiss(animated: true, completion: {
+                self.navigationController?.popViewController(animated: true)
+            })
         }
         alertController.addAction(okAction)
         
@@ -167,6 +162,30 @@ class SearchLocationViewController: UIViewController {
         alertController.addAction(cancelAction)
         
         present(alertController, animated: true, completion: nil)
+    }
+    
+    private func searchLocation(with indexPath: IndexPath) -> Observable<Coordinate?> {
+        return Observable.create { emitter in
+            let selectedResult = self.searchResults[indexPath.row]
+            let searchRequest = MKLocalSearch.Request(completion: selectedResult)
+            let search = MKLocalSearch(request: searchRequest)
+            var coordinate: Coordinate?
+            search.start { reponse, error in
+                guard error == nil else {
+                    print(error?.localizedDescription)
+                    return
+                }
+                guard let placeMark = reponse?.mapItems[0].placemark else {
+                    return
+                }
+                
+                coordinate = Coordinate(latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
+                
+                emitter.onNext(coordinate)
+            }
+            
+            return Disposables.create()
+        }
     }
 }
 
@@ -180,3 +199,4 @@ extension SearchLocationViewController: MKLocalSearchCompleterDelegate {
         print(error.localizedDescription)
     }
 }
+

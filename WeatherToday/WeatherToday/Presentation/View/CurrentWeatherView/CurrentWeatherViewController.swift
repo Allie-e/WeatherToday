@@ -74,16 +74,18 @@ class CurrentWeatherViewController: UIViewController {
         let output = viewModel.transform(input)
         
         output.loadCurrentWeather
-            .subscribe(onNext: { weather in
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
                 guard let weather = weather else { return }
-                self.currentWeatherView.setupLabelText(with: weather)
+                owner.currentWeatherView.setupLabelText(with: weather)
             })
             .disposed(by: disposeBag)
         
         output.loadForecastWeather
-            .subscribe(onNext: { weather in
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
                 guard let weather = weather else { return }
-                self.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
+                owner.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
             })
             .disposed(by: disposeBag)
     }

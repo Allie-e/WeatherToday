@@ -10,22 +10,17 @@ import RxSwift
 import CoreLocation
 
 final class LocationListViewModel: ViewModelDescribing {
-    final class Input {
+    struct Input {
         let loadLocation: Observable<[CLLocation]>
-        
-        init(loadLocation: Observable<[CLLocation]>) {
-            self.loadLocation = loadLocation
-        }
+        let addNewLocation: Observable<Coordinate>
     }
     
-    final class Output {
+    struct Output {
         let loadCurrentWeather: Observable<CurrentWeather?>
-        
-        init(loadCurrentWeather: Observable<CurrentWeather?>) {
-            self.loadCurrentWeather = loadCurrentWeather
-        }
+        let addNewWeather: Observable<CurrentWeather?>
     }
     
+    private(set) var locationList: [CurrentWeather] = []
     private let locationListUseCase = LocationListUseCase()
     private let disposeBag: DisposeBag = .init()
     
@@ -39,8 +34,15 @@ final class LocationListViewModel: ViewModelDescribing {
                 
                 return owner.fetchCurrentWeather(with: location.coordinate.latitude, location.coordinate.longitude)
             })
+            
         
-        return Output(loadCurrentWeather: currentWeather)
+        let newWeather = input.addNewLocation
+            .withUnretained(self)
+            .flatMap({ owner, location -> Observable<CurrentWeather?> in
+                return owner.fetchCurrentWeather(with: location.latitude, location.longitude)
+            })
+        
+        return Output(loadCurrentWeather: currentWeather, addNewWeather: newWeather)
     }
     
     private func fetchCurrentWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {

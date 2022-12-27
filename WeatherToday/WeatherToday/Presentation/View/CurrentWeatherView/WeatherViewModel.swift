@@ -10,22 +10,13 @@ import RxSwift
 import CoreLocation
 
 final class WeatherViewModel: ViewModelDescribing {
-    final class Input {
+    struct Input {
         let loadLocation: Observable<[CLLocation]>
-        
-        init(loadLocation: Observable<[CLLocation]>) {
-            self.loadLocation = loadLocation
-        }
     }
     
-    final class Output {
+    struct Output {
         let loadCurrentWeather: Observable<CurrentWeather?>
         let loadForecastWeather: Observable<ForecastWeather?>
-        
-        init(loadCurrentWeather: Observable<CurrentWeather?>, loadForecastWeather: Observable<ForecastWeather?>) {
-            self.loadCurrentWeather = loadCurrentWeather
-            self.loadForecastWeather = loadForecastWeather
-        }
     }
     
     private let currentWeatherUseCase = CurrentWeatherUseCase()
