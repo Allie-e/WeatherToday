@@ -78,16 +78,14 @@ class LocationListViewController: UIViewController {
         output.loadCurrentWeather
             .withUnretained(self)
             .subscribe(onNext: { _, weather in
-                guard let weather = weather else { return }
-                self.applySnapShot(with: [weather])
+                self.applySnapShot(with: weather)
             })
             .disposed(by: disposeBag)
         
         output.addNewWeather
             .withUnretained(self)
             .subscribe(onNext: { _, weather in
-                guard let weather = weather else { return }
-                self.applySnapShot(with: [weather])
+                self.applySnapShot(with: weather)
             })
             .disposed(by: disposeBag)
     }
@@ -130,20 +128,21 @@ class LocationListViewController: UIViewController {
     
     private func setupDataSource() {
         dataSource = DiffableDataSource(tableView: locationListView, cellProvider: { (tableView, indexPath, item) -> LocationListTableViewCell in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "LocationListTableViewCell", for: indexPath) as? LocationListTableViewCell else {
-                return LocationListTableViewCell()
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: "LocationListTableViewCell", for: indexPath) as? LocationListTableViewCell else {
+                    return LocationListTableViewCell()
+                }
+                cell.setupLocationListCell(with: item)
+                
+                return cell
             }
-            cell.setupLocationListCell(with: item)
-            
-            return cell
-        })
+        )
         locationListView.dataSource = dataSource
     }
     
     private func applySnapShot(with weather: [CurrentWeather]) {
-        snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
         snapshot.appendSections([.location])
-        snapshot.appendItems(weather, toSection: .location)
+        snapshot.appendItems(weather)
         snapshot.reloadItems(weather)
         dataSource?.apply(snapshot)
     }

@@ -9,9 +9,9 @@ import Foundation
 import RxSwift
 
 final class LocationListUseCase {
-    private let currentWeatherRepository = CurrentWeatherRepository()
+    private let locationRepository = LocationRepository()
     
-    func fetchCurrentWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {
-        return currentWeatherRepository.fetchCurrentWeather(with: latitude, longitude)
+    func fetchLocationWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {
+        return locationRepository.fetchWeather(with: latitude, longitude)
     }
 }

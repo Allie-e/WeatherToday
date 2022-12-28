@@ -236,6 +236,6 @@ class CurrentWeatherViewController: UIViewController {
         snapshot.appendSections([.daily])
         snapshot.appendItems(dailyWeatherItems)
         
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        dataSource?.apply(snapshot)
     }
 }
