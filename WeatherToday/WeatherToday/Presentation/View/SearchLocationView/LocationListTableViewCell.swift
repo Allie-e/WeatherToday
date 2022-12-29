@@ -82,36 +82,40 @@ final class LocationListTableViewCell: UITableViewCell {
     
     private func setupLayout() {
         containerView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(10)
+            make.top.equalToSuperview().offset(10)
+            make.bottom.leading.trailing.equalToSuperview()
         }
         
         nameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview()
+            make.top.equalToSuperview().offset(5)
+            make.leading.equalToSuperview().offset(10)
             make.height.equalTo(30)
         }
         
         currentWeatherLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(5)
+            make.trailing.equalToSuperview().offset(-10)
             make.height.equalTo(30)
         }
         
         descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.bottom).offset(10)
-            make.bottom.leading.equalToSuperview()
+            make.top.equalTo(nameLabel.snp.bottom).offset(5)
+            make.leading.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-5)
         }
         
         temperatureLabel.snp.makeConstraints { make in
             make.top.equalTo(currentWeatherLabel.snp.bottom).offset(10)
-            make.bottom.trailing.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview().offset(-5)
         }
     }
     
     private func setupCell() {
-        backgroundColor = UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0)
-        layer.cornerRadius = 15
-        layer.masksToBounds = true
+        backgroundColor = .clear
         selectionStyle = .none
+        containerView.backgroundColor = UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0)
+        containerView.layer.cornerRadius = 15
+        containerView.layer.masksToBounds = true
     }
 }
