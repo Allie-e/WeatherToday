@@ -128,6 +128,7 @@ class MainViewController: UIViewController {
         toolBar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolBar.backgroundColor = .clear
         toolBar.tintColor = .white
+        toolBar.sizeToFit()
         toolBar.setItems([linkBarButton, flexibleSpace, pageControl, flexibleSpace, listBarButton],
                          animated: true)
         toolBar.isHidden = false
