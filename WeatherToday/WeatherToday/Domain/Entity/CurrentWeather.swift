@@ -15,4 +15,5 @@ struct CurrentWeather: Hashable {
     let id: Int
     let name: String
     let cod: Int
+    let uuid: UUID = UUID()
 }

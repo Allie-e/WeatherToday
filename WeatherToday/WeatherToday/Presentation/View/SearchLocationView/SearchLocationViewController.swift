@@ -46,6 +46,7 @@ class SearchLocationViewController: UIViewController {
     
     private var dataSource: UITableViewDiffableDataSource<Section, MKLocalSearchCompletion>?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, MKLocalSearchCompletion>()
+    private var searchRegion: MKCoordinateRegion = MKCoordinateRegion(MKMapRect.world)
     private var searchCompleter = MKLocalSearchCompleter()
     private var searchResults = [MKLocalSearchCompletion]()
     private let disposeBag: DisposeBag = .init()
@@ -68,13 +69,9 @@ class SearchLocationViewController: UIViewController {
             .orEmpty
             .distinctUntilChanged()
             .withUnretained(self)
+            .debounce(.milliseconds(1), scheduler: MainScheduler.instance)
             .subscribe(onNext: { owner, searchText in
-                if searchText == "" {
-                    owner.searchResults.removeAll()
-                    owner.searchLocationTableView.reloadData()
-                }
                 owner.searchCompleter.queryFragment = searchText
-                owner.applySnapShot(with: self.searchResults)
             })
             .disposed(by: disposeBag)
         
@@ -119,6 +116,7 @@ class SearchLocationViewController: UIViewController {
     private func setupSearchCompleter() {
         searchCompleter.delegate = self
         searchCompleter.resultTypes = .address
+        searchCompleter.region = searchRegion
     }
     
     private func registerTableViewCell() {
@@ -171,13 +169,8 @@ class SearchLocationViewController: UIViewController {
             let search = MKLocalSearch(request: searchRequest)
             var coordinate: Coordinate?
             search.start { reponse, error in
-                guard error == nil else {
-                    print(error?.localizedDescription)
-                    return
-                }
-                guard let placeMark = reponse?.mapItems[0].placemark else {
-                    return
-                }
+                guard error == nil else { return }
+                guard let placeMark = reponse?.mapItems[0].placemark else { return }
                 
                 coordinate = Coordinate(latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
                 
@@ -192,11 +185,10 @@ class SearchLocationViewController: UIViewController {
 extension SearchLocationViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         searchResults = completer.results
-        searchLocationTableView.reloadData()
+        applySnapShot(with: searchResults)
     }
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         print(error.localizedDescription)
     }
 }
-
