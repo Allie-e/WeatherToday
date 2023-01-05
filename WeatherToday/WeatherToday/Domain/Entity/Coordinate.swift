@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Coordinate {
+struct Coordinate: Hashable {
     var latitude: Double
     var longitude: Double
 }

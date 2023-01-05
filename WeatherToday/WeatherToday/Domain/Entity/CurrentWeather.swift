@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CurrentWeather {
+struct CurrentWeather: Hashable {
     let coord: Coordinate
     let weather: [Weather]
     let temperature: Temperature
@@ -15,4 +15,5 @@ struct CurrentWeather {
     let id: Int
     let name: String
     let cod: Int
+    let uuid: UUID = UUID()
 }

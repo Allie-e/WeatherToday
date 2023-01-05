@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 import RxSwift
 
-class MainViewController: UIViewController {
+class CurrentWeatherViewController: UIViewController {
     private typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, WeatherItem>
     
     private enum WeatherItem: Hashable {
@@ -51,14 +51,13 @@ class MainViewController: UIViewController {
     private var dataSource: DiffableDataSource?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherItem>()
     
-    let viewModel = WeatherViewModel()
+    var viewModel: WeatherViewModel?
+    var locationManager: CLLocationManager!
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
-    var locationManager: CLLocationManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViewControllerLayer()
         setupCollectionView()
         registerCollectionViewCell()
         addSubviews()
@@ -71,20 +70,38 @@ class MainViewController: UIViewController {
     
     private func bind() {
         let location = locationManager.rx.didUpdateLocations
-        let input = WeatherViewModel.Input(loadLocation: location)
-        let output = viewModel.transform(input)
+        let input = WeatherViewModel.Input(loadLocation: location, viewDidLoad: .just(Void()), updateNewLocation: loadLocationObservable)
+        let output = viewModel?.transform(input)
         
-        output.loadCurrentWeather
-            .subscribe(onNext: { weather in
+        output?.loadCurrentWeather
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
                 guard let weather = weather else { return }
-                self.currentWeatherView.setupLabelText(with: weather)
+                owner.currentWeatherView.setupLabelText(with: weather)
             })
             .disposed(by: disposeBag)
         
-        output.loadForecastWeather
-            .subscribe(onNext: { weather in
+        output?.loadForecastWeather
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
                 guard let weather = weather else { return }
-                self.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
+                owner.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
+            })
+            .disposed(by: disposeBag)
+        
+        output?.updateNewCurrentWeather
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
+                guard let weather = weather else { return }
+                owner.currentWeatherView.setupLabelText(with: weather)
+            })
+            .disposed(by: disposeBag)
+        
+        output?.updateNewForecastWeather
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
+                guard let weather = weather else { return }
+                owner.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
             })
             .disposed(by: disposeBag)
     }
@@ -100,22 +117,6 @@ class MainViewController: UIViewController {
         [currentWeatherView, forecastCollectionView].forEach { view in
             self.view.addSubview(view)
         }
-    }
-    
-    private func setupViewControllerLayer() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = view.bounds
-        
-        let colors = [
-            UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0).cgColor,
-            UIColor(red: 138/255, green: 217/255, blue: 237/255, alpha: 1.0).cgColor,
-            UIColor(red: 186/255, green: 238/255, blue: 251/255, alpha: 1.0).cgColor
-        ]
-        
-        gradientLayer.colors = colors
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        view.layer.addSublayer(gradientLayer)
     }
     
     private func setupCurrentWeatherViewLayout() {
@@ -251,6 +252,6 @@ class MainViewController: UIViewController {
         snapshot.appendSections([.daily])
         snapshot.appendItems(dailyWeatherItems)
         
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        dataSource?.apply(snapshot)
     }
 }

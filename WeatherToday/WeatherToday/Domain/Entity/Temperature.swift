@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Temperature {
+struct Temperature: Hashable {
     let current: Double
     let feelsLike: Double
     let min: Double

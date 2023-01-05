@@ -9,52 +9,55 @@ import Foundation
 import RxSwift
 import CoreLocation
 
-
 final class WeatherViewModel: ViewModelDescribing {
-    final class Input {
+    struct Input {
         let loadLocation: Observable<[CLLocation]>
-        
-        init(loadLocation: Observable<[CLLocation]>) {
-            self.loadLocation = loadLocation
-        }
+        let viewDidLoad: Observable<Void>
+        let updateNewLocation: Observable<Coordinate>
     }
     
-    final class Output {
+    struct Output {
         let loadCurrentWeather: Observable<CurrentWeather?>
         let loadForecastWeather: Observable<ForecastWeather?>
-        
-        init(loadCurrentWeather: Observable<CurrentWeather?>, loadForecastWeather: Observable<ForecastWeather?>) {
-            self.loadCurrentWeather = loadCurrentWeather
-            self.loadForecastWeather = loadForecastWeather
-        }
+        let updateNewCurrentWeather: Observable<CurrentWeather?>
+        let updateNewForecastWeather: Observable<ForecastWeather?>
     }
     
+    let coord: Coordinate
     private let currentWeatherUseCase = CurrentWeatherUseCase()
     private let forecastWeatherUseCase = ForecastWeatherUseCase()
     private let disposeBag: DisposeBag = .init()
     
+    init(coord: Coordinate) {
+        self.coord = coord
+    }
+    
     func transform(_ input: Input) -> Output {
-        let currentWeather = input.loadLocation
+        let currentWeather = input.viewDidLoad
+            .withUnretained(self)
+            .flatMap({ owner, _ -> Observable<CurrentWeather?> in
+                return owner.fetchCurrentWeather(with: owner.coord.latitude, owner.coord.longitude)
+            })
+        
+        let forecastWeather = input.viewDidLoad
+            .withUnretained(self)
+            .flatMap({ owner, _ -> Observable<ForecastWeather?> in
+                return owner.fetchForecastWeather(with: owner.coord.latitude, owner.coord.longitude)
+            })
+        
+        let newCurrentWeather = input.updateNewLocation
             .withUnretained(self)
             .flatMap({ owner, location -> Observable<CurrentWeather?> in
-                guard let location = location.first else {
-                    return Observable.empty()
-                }
-                
-                return owner.fetchCurrentWeather(with: location.coordinate.latitude, location.coordinate.longitude)
+                return owner.fetchCurrentWeather(with: location.latitude, location.longitude)
             })
         
-        let forecastWeather = input.loadLocation
+        let newForecastWeather = input.updateNewLocation
             .withUnretained(self)
             .flatMap({ owner, location -> Observable<ForecastWeather?> in
-                guard let location = location.first else {
-                    return Observable.empty()
-                }
-                
-                return owner.fetchForecastWeather(with: location.coordinate.latitude, location.coordinate.longitude)
+                return owner.fetchForecastWeather(with: location.latitude, location.longitude)
             })
         
-        return Output(loadCurrentWeather: currentWeather, loadForecastWeather: forecastWeather)
+        return Output(loadCurrentWeather: currentWeather, loadForecastWeather: forecastWeather, updateNewCurrentWeather: newCurrentWeather, updateNewForecastWeather: newForecastWeather)
     }
     
     private func fetchCurrentWeather(with latitude: Double, _ longitude: Double) -> Observable<CurrentWeather?> {
