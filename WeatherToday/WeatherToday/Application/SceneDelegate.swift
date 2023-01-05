@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -15,7 +16,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = MainViewController()
+        let currentWeatherViewController = CurrentWeatherViewController()
+        let viewModel = WeatherViewModel(coord: LocationManager.shared.getCurrentLocation())
+        currentWeatherViewController.viewModel = viewModel
+        
+        let mainViewController = MainViewController()
+        mainViewController.updateViewControllerLists(with: currentWeatherViewController)
+        
+        window?.rootViewController = UINavigationController(rootViewController: mainViewController)
         window?.backgroundColor = .systemBackground
         window?.makeKeyAndVisible()
     }

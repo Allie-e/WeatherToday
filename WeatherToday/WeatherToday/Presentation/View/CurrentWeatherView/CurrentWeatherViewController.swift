@@ -51,10 +51,10 @@ class CurrentWeatherViewController: UIViewController {
     private var dataSource: DiffableDataSource?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, WeatherItem>()
     
-    let viewModel = WeatherViewModel()
+    var viewModel: WeatherViewModel?
+    var locationManager: CLLocationManager!
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
-    var locationManager: CLLocationManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,10 +70,10 @@ class CurrentWeatherViewController: UIViewController {
     
     private func bind() {
         let location = locationManager.rx.didUpdateLocations
-        let input = WeatherViewModel.Input(loadLocation: location)
-        let output = viewModel.transform(input)
+        let input = WeatherViewModel.Input(loadLocation: location, viewDidLoad: .just(Void()), updateNewLocation: loadLocationObservable)
+        let output = viewModel?.transform(input)
         
-        output.loadCurrentWeather
+        output?.loadCurrentWeather
             .withUnretained(self)
             .subscribe(onNext: { owner, weather in
                 guard let weather = weather else { return }
@@ -81,7 +81,23 @@ class CurrentWeatherViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        output.loadForecastWeather
+        output?.loadForecastWeather
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
+                guard let weather = weather else { return }
+                owner.applySnapshotWith(hourlyWeather: weather.hourly, dailyWeather: weather.daily)
+            })
+            .disposed(by: disposeBag)
+        
+        output?.updateNewCurrentWeather
+            .withUnretained(self)
+            .subscribe(onNext: { owner, weather in
+                guard let weather = weather else { return }
+                owner.currentWeatherView.setupLabelText(with: weather)
+            })
+            .disposed(by: disposeBag)
+        
+        output?.updateNewForecastWeather
             .withUnretained(self)
             .subscribe(onNext: { owner, weather in
                 guard let weather = weather else { return }

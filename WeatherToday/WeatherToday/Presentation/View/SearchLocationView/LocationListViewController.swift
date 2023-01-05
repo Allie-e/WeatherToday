@@ -47,10 +47,12 @@ class LocationListViewController: UIViewController {
     private var dataSource: DiffableDataSource?
     private var snapshot = NSDiffableDataSourceSnapshot<Section, CurrentWeather>()
     
+    var selectCellAction: ((Coordinate) -> Void)?
+    var locationManager: CLLocationManager!
+
     let viewModel = LocationListViewModel()
     let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
-    var locationManager: CLLocationManager!
     let coordinateRelay: PublishRelay<Coordinate> = .init()
     
     override func viewDidLoad() {
@@ -63,6 +65,7 @@ class LocationListViewController: UIViewController {
         setupLocationManager()
         bind()
         bindSearchButton()
+        bindTableView()
     }
     
     private func initView() {
@@ -100,6 +103,17 @@ class LocationListViewController: UIViewController {
                 searchNavigationController.modalPresentationStyle = .fullScreen
                 self.present(searchNavigationController, animated: true)
             }
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindTableView() {
+        locationListView.rx.itemSelected
+            .withUnretained(self)
+            .subscribe(onNext: { owner, indexPath in
+                let coordinate = owner.viewModel.currentWeathers[indexPath.row].coord
+                owner.selectCellAction?(coordinate)
+                owner.dismiss(animated: true, completion: nil)
+            })
             .disposed(by: disposeBag)
     }
     

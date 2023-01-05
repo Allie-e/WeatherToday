@@ -10,7 +10,7 @@ import SnapKit
 import RxSwift
 
 class MainViewController: UIViewController {
-    private var viewControllerList = [CurrentWeatherViewController()]
+    private var viewControllerList = [CurrentWeatherViewController]()
     private let toolBar = UIToolbar()
     private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
     private let pageControl: UIPageControl = {
@@ -57,6 +57,10 @@ class MainViewController: UIViewController {
         bind()
     }
     
+    func updateViewControllerLists(with viewController: CurrentWeatherViewController) {
+        viewControllerList.append(viewController)
+    }
+    
     private func bind() {
         linkBarButton.rx.tap
             .bind {
@@ -67,11 +71,23 @@ class MainViewController: UIViewController {
         
         listBarButton.rx.tap
             .bind {
-                let locationListNavigationController = UINavigationController(rootViewController: LocationListViewController())
+                let listVC = LocationListViewController()
+                listVC.selectCellAction = { [weak self] coordinate in
+                    self?.addNewWeatherViewController(with: coordinate)
+                }
+                
+                let locationListNavigationController = UINavigationController(rootViewController: listVC)
                 locationListNavigationController.modalPresentationStyle = .fullScreen
                 self.present(locationListNavigationController, animated: true)
             }
             .disposed(by: disposeBag)
+    }
+    
+    private func addNewWeatherViewController(with coord: Coordinate) {
+        let destination = CurrentWeatherViewController()
+        let viewModel = WeatherViewModel(coord: coord)
+        destination.viewModel = viewModel
+        viewControllerList.append(destination)
     }
     
     private func addSubviews() {
