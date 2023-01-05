@@ -57,9 +57,9 @@ final class LocationListTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        initView()
         addSubviews()
         setupLayout()
-        setupCell()
     }
     
     required init?(coder: NSCoder) {
@@ -71,6 +71,14 @@ final class LocationListTableViewCell: UITableViewCell {
         currentWeatherLabel.text = "\(data.temperature.current.toRoundedString())°"
         descriptionLabel.text = data.weather.first?.weatherDescription
         temperatureLabel.text = "최고: \(data.temperature.max.toRoundedString())° 최저: \(data.temperature.min.toRoundedString())°"
+    }
+    
+    private func initView() {
+        backgroundColor = .clear
+        selectionStyle = .none
+        containerView.backgroundColor = UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0)
+        containerView.layer.cornerRadius = 15
+        containerView.layer.masksToBounds = true
     }
     
     private func addSubviews() {
@@ -109,13 +117,5 @@ final class LocationListTableViewCell: UITableViewCell {
             make.trailing.equalToSuperview().offset(-10)
             make.bottom.equalToSuperview().offset(-5)
         }
-    }
-    
-    private func setupCell() {
-        backgroundColor = .clear
-        selectionStyle = .none
-        containerView.backgroundColor = UIColor(red: 93/255, green: 140/255, blue: 210/255, alpha: 1.0)
-        containerView.layer.cornerRadius = 15
-        containerView.layer.masksToBounds = true
     }
 }

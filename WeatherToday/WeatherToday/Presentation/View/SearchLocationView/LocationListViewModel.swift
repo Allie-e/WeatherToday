@@ -38,7 +38,6 @@ final class LocationListViewModel: ViewModelDescribing {
                 self.saveCurrentWeathers(weathers: weather)
                 return self.currentWeathers
             }
-            
         
         let newWeather = input.addNewLocation
             .withUnretained(self)

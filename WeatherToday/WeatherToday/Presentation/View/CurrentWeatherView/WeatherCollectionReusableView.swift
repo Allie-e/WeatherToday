@@ -20,6 +20,7 @@ final class WeatherCollectionReusableView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        addSubviews()
         setupLayout()
         addUnderLine()
     }
@@ -31,21 +32,6 @@ final class WeatherCollectionReusableView: UICollectionReusableView {
     override func prepareForReuse() {
         super.prepareForReuse()
         titleLabel.text = nil
-    }
-    
-    private func setupLayout() {
-        addSubview(titleLabel)
-        
-        titleLabel.snp.makeConstraints { make in
-            make.top.bottom.trailing.equalTo(self)
-            make.leading.equalTo(self).offset(10)
-        }
-    }
-    
-    private func addUnderLine() {
-        let underline = layer.makeBorder([.bottom], color: UIColor.systemGray3, width: 0.5)
-        underline.frame = CGRect(x: 18, y: layer.frame.height, width: underline.frame.width - 1, height: underline.frame.height)
-        layer.addSublayer(underline)
     }
     
     func setupLabel(with indexPath: IndexPath) {
@@ -74,5 +60,22 @@ final class WeatherCollectionReusableView: UICollectionReusableView {
             titleLabel.attributedText = attributedString
             titleLabel.sizeToFit()
         }
+    }
+    
+    private func addSubviews() {
+        addSubview(titleLabel)
+    }
+    
+    private func setupLayout() {
+        titleLabel.snp.makeConstraints { make in
+            make.top.bottom.trailing.equalTo(self)
+            make.leading.equalTo(self).offset(10)
+        }
+    }
+    
+    private func addUnderLine() {
+        let underline = layer.makeBorder([.bottom], color: UIColor.systemGray3, width: 0.5)
+        underline.frame = CGRect(x: 18, y: layer.frame.height, width: underline.frame.width - 1, height: underline.frame.height)
+        layer.addSublayer(underline)
     }
 }

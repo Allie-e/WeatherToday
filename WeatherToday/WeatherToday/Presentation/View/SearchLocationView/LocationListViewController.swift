@@ -51,18 +51,18 @@ class LocationListViewController: UIViewController {
     var locationManager: CLLocationManager!
 
     let viewModel = LocationListViewModel()
-    let loadLocationObservable: PublishSubject<Coordinate> = .init()
     let disposeBag: DisposeBag = .init()
     let coordinateRelay: PublishRelay<Coordinate> = .init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
         initView()
+        addSubviews()
         setupLayout()
+        setupNavigationBar()
+        setupLocationManager()
         registerTableViewCell()
         setupDataSource()
-        setupLocationManager()
         bind()
         bindSearchButton()
         bindTableView()
@@ -70,9 +70,18 @@ class LocationListViewController: UIViewController {
     
     private func initView() {
         view.backgroundColor = .black
+    }
+    
+    private func addSubviews() {
         view.addSubview(locationListView)
     }
     
+    private func setupLayout() {
+        locationListView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+        
     private func bind() {
         let location = locationManager.rx.didUpdateLocations
         let input = LocationListViewModel.Input(loadLocation: location, addNewLocation: coordinateRelay.asObservable())
@@ -117,23 +126,17 @@ class LocationListViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func setupLocationManager() {
-        locationManager = CLLocationManager()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-    }
-    
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
         navigationItem.rightBarButtonItem = searchButton
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    private func setupLayout() {
-        locationListView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+    private func setupLocationManager() {
+        locationManager = CLLocationManager()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
     private func registerTableViewCell() {

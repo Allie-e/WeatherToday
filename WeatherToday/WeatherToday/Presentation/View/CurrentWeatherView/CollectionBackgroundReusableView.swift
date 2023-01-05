@@ -20,6 +20,8 @@ final class CollectionBackgroundReusableView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        initView()
+        addSubviews()
         setupLayout()
     }
     
@@ -27,10 +29,15 @@ final class CollectionBackgroundReusableView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupLayout() {
+    private func initView() {
         backgroundColor = .clear
+    }
+    
+    private func addSubviews() {
         addSubview(backgroundView)
-        
+    }
+    
+    private func setupLayout() {
         backgroundView.snp.makeConstraints { make in
             make.edges.equalTo(self)
         }

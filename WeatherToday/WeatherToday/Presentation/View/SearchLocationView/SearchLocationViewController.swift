@@ -56,7 +56,7 @@ class SearchLocationViewController: UIViewController {
         super.viewDidLoad()
         bindSearchController()
         bindTableView()
-        initView()
+        addSubviews()
         setupNavigationBar()
         setupLayout()
         setupSearchCompleter()
@@ -96,7 +96,7 @@ class SearchLocationViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func initView() {
+    private func addSubviews() {
         view.addSubview(searchLocationTableView)
     }
     
