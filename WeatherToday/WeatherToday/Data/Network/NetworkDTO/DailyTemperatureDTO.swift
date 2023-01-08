@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailyTemperatureDTO: Codable {
+struct DailyTemperatureDTO: Decodable {
     let min: Double
     let max: Double
     

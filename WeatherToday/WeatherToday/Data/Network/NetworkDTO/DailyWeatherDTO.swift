@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailyWeatherDTO: Codable {
+struct DailyWeatherDTO: Decodable {
     let dt: Int
     let temp: DailyTemperatureDTO
     let weather: [WeatherDTO]

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CurrentWeatherDTO: Codable {
+struct CurrentWeatherDTO: Decodable {
     let coord: CoordinateDTO
     let weather: [WeatherDTO]
     let main: CurrentTemperatureDTO
