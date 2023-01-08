@@ -88,6 +88,7 @@ class MainViewController: UIViewController {
         let viewModel = WeatherViewModel(coord: coord)
         destination.viewModel = viewModel
         viewControllerList.append(destination)
+        pageControl.numberOfPages = viewControllerList.count
     }
     
     private func addSubviews() {
