@@ -10,6 +10,8 @@
 		06F0A29B484401C8A82E597D /* Pods_WeatherToday.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8CF4570B2959AFE900853 /* Pods_WeatherToday.framework */; };
 		24B9215F4FC942947CE00D4F /* Pods_WeatherTodayTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F827599986F46C189CD68E77 /* Pods_WeatherTodayTests.framework */; };
 		ECA3A381BC35F40AD7837852 /* Pods_WeatherToday_WeatherTodayUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4D88F77E66006199DEAD57C /* Pods_WeatherToday_WeatherTodayUITests.framework */; };
+		FB038B46296AD20B00A39384 /* WeatherInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB038B45296AD20B00A39384 /* WeatherInfo.plist */; };
+		FB038B48296AD29800A39384 /* WeatherToday++Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB038B47296AD29800A39384 /* WeatherToday++Bundle.swift */; };
 		FB5432AD2923C4EC00C5FBD0 /* DailyWeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5432AC2923C4EC00C5FBD0 /* DailyWeatherCollectionViewCell.swift */; };
 		FB5432B3292B95D000C5FBD0 /* CALayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5432B2292B95D000C5FBD0 /* CALayer+Extension.swift */; };
 		FB5432B82930E66600C5FBD0 /* WeatherCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5432B72930E66600C5FBD0 /* WeatherCollectionReusableView.swift */; };
@@ -92,6 +94,8 @@
 		C22DCC9EEFCD834872109106 /* Pods-WeatherTodayTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherTodayTests.debug.xcconfig"; path = "Target Support Files/Pods-WeatherTodayTests/Pods-WeatherTodayTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D4D88F77E66006199DEAD57C /* Pods_WeatherToday_WeatherTodayUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherToday_WeatherTodayUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F827599986F46C189CD68E77 /* Pods_WeatherTodayTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherTodayTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB038B45296AD20B00A39384 /* WeatherInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WeatherInfo.plist; sourceTree = "<group>"; };
+		FB038B47296AD29800A39384 /* WeatherToday++Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WeatherToday++Bundle.swift"; sourceTree = "<group>"; };
 		FB4B1006957D11433CBCE63E /* Pods-WeatherToday-WeatherTodayUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherToday-WeatherTodayUITests.release.xcconfig"; path = "Target Support Files/Pods-WeatherToday-WeatherTodayUITests/Pods-WeatherToday-WeatherTodayUITests.release.xcconfig"; sourceTree = "<group>"; };
 		FB5432AC2923C4EC00C5FBD0 /* DailyWeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB5432B2292B95D000C5FBD0 /* CALayer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Extension.swift"; sourceTree = "<group>"; };
@@ -311,6 +315,8 @@
 				FB9011AB2912597000228B35 /* Application */,
 				FB9011AC291259C200228B35 /* Resource */,
 				FBEFD7DF28FFFF1D00CC50DE /* Info.plist */,
+				FB038B45296AD20B00A39384 /* WeatherInfo.plist */,
+				FB038B47296AD29800A39384 /* WeatherToday++Bundle.swift */,
 			);
 			path = WeatherToday;
 			sourceTree = "<group>";
@@ -557,6 +563,7 @@
 			files = (
 				FBEFD7DE28FFFF1D00CC50DE /* LaunchScreen.storyboard in Resources */,
 				FBEFD7DB28FFFF1D00CC50DE /* Assets.xcassets in Resources */,
+				FB038B46296AD20B00A39384 /* WeatherInfo.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,6 +703,7 @@
 				FBEFD82D2906E03600CC50DE /* Double+Extension.swift in Sources */,
 				FB9011C029151B3300228B35 /* ForecastWeatherUseCase.swift in Sources */,
 				FB9011C8291BD03500228B35 /* CellReusable.swift in Sources */,
+				FB038B48296AD29800A39384 /* WeatherToday++Bundle.swift in Sources */,
 				FB81D856295B2D1500C4E6FF /* LocationRepository.swift in Sources */,
 				FBEFD81A2905268B00CC50DE /* CurrentTemperatureDTO.swift in Sources */,
 				FB9011C4291BABFC00228B35 /* Date+Extension.swift in Sources */,
