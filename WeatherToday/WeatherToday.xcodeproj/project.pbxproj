@@ -208,14 +208,67 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		FB81D83229364C2D00C4E6FF /* SearchLocationView */ = {
+		FB038B49296ADE0900A39384 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				FB81D83529364D0D00C4E6FF /* LocationListViewController.swift */,
-				FB81D83B293E036D00C4E6FF /* LocationListTableViewCell.swift */,
-				FB81D8452943178E00C4E6FF /* LocationListViewModel.swift */,
 				FB81D84F294391CF00C4E6FF /* SearchLocationViewController.swift */,
+				FB038B4B296ADE1B00A39384 /* Cell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB038B4A296ADE1500A39384 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				FB81D8452943178E00C4E6FF /* LocationListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		FB038B4B296ADE1B00A39384 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
 				FB81D84B2943645E00C4E6FF /* SearchLocationTableViewCell.swift */,
+				FB81D83B293E036D00C4E6FF /* LocationListTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		FB038B4C296ADE3800A39384 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				FB90119F290823A300228B35 /* WeatherViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		FB038B4D296ADE4000A39384 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FBEFD7D528FFFF1B00CC50DE /* CurrentWeatherViewController.swift */,
+				FBEFD8292906C26300CC50DE /* CurrentWeatherView.swift */,
+				FB5432B72930E66600C5FBD0 /* WeatherCollectionReusableView.swift */,
+				FB81D82D29362E2400C4E6FF /* CollectionBackgroundReusableView.swift */,
+				FB038B4E296ADE4500A39384 /* Cell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB038B4E296ADE4500A39384 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				FB9011C1291B94E500228B35 /* HourlyWeatherCollectionViewCell.swift */,
+				FB5432AC2923C4EC00C5FBD0 /* DailyWeatherCollectionViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		FB81D83229364C2D00C4E6FF /* SearchLocationView */ = {
+			isa = PBXGroup;
+			children = (
+				FB038B49296ADE0900A39384 /* View */,
+				FB038B4A296ADE1500A39384 /* ViewModel */,
 			);
 			path = SearchLocationView;
 			sourceTree = "<group>";
@@ -420,13 +473,8 @@
 		FBEFD8282906C06900CC50DE /* CurrentWeatherView */ = {
 			isa = PBXGroup;
 			children = (
-				FBEFD7D528FFFF1B00CC50DE /* CurrentWeatherViewController.swift */,
-				FBEFD8292906C26300CC50DE /* CurrentWeatherView.swift */,
-				FB9011C1291B94E500228B35 /* HourlyWeatherCollectionViewCell.swift */,
-				FB5432AC2923C4EC00C5FBD0 /* DailyWeatherCollectionViewCell.swift */,
-				FB5432B72930E66600C5FBD0 /* WeatherCollectionReusableView.swift */,
-				FB81D82D29362E2400C4E6FF /* CollectionBackgroundReusableView.swift */,
-				FB90119F290823A300228B35 /* WeatherViewModel.swift */,
+				FB038B4D296ADE4000A39384 /* View */,
+				FB038B4C296ADE3800A39384 /* ViewModel */,
 			);
 			path = CurrentWeatherView;
 			sourceTree = "<group>";
